@@ -12,14 +12,8 @@ function redirecter(config){
   }, config);
    
   redirecter.server = http.createServer(function(request, response){
-  	response.writeHead(200, {"Content-Type":"text/html"});
-  	
-  	headers = _.extend(request.headers, {
-  	  'accept-encoding': 'utf-8'
-  	});
-  	
   	var options = {
-      headers:headers,
+      headers:request.headers,
   	  hostname: redirecter.config.proxy.host,  
   	  port: redirecter.config.proxy.port,
   	  method: "get",
@@ -27,6 +21,8 @@ function redirecter(config){
   	};
     
     var req = http.request(options, function(res) {
+      response.writeHead(res.statusCode, res.headers);
+
       res.on('data', function (chunk) {
         response.write(chunk);
       });
