@@ -17,7 +17,7 @@ function redirecter(config){
   	  hostname: redirecter.config.proxy.host,  
   	  port: redirecter.config.proxy.port,
   	  method: "get",
-  	  path:"/"
+  	  path:request.url
   	};
     
     var req = http.request(options, function(res) {
