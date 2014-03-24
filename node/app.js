@@ -1,3 +1,3 @@
-redirecter = require('./libs/redirecter.js');
+redirecter = require('./libs/redirecter/http.js');
 
 redirecter();

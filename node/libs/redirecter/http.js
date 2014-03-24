@@ -1,24 +1,40 @@
 var http = require('http');
+var _ = require("underscore");
 
 function redirecter(config){
-  var server = http.createServer(function(request, response){
-    http.request(options, function(res)
-    {
-        var output = '';
-        console.log(options.host + ':' + res.statusCode);
-        res.setEncoding('utf8');
+  redirecter = this;
+  redirecter.config = _.extend({
+    port:3333,
+    proxy: {
+      host: "localhost",
+      port: 80
+    }
+  }, config);
+   
+  redirecter.server = http.createServer(function(request, response){
+  	response.writeHead(200, {"Content-Type":"text/html"});
+  	
+  	var options = {
+  	  hostname: redirecter.config.proxy.host,
+  	  port: redirecter.config.proxy.port,
+  	  method: "get",
+  	  path:"/"
+  	};
+    
+    var req = http.request(options, function(res) {
+      res.on('data', function (chunk) {
+      	response.write(chunk);
+      });
 
-        res.on('data', function (chunk) {
-            output += chunk;
-        });
-
-        res.on('end', function() {
-            var obj = JSON.parse(output);
-            onResult(res.statusCode, obj);
-        });
+      res.on('end', function() {
+      	response.end();
+      });
+    });
+    
+    req.end();
   });
 
-  server.listen(5000);
+  redirecter.server.listen(redirecter.config.port);
 };
 
 module.exports = function(config){
