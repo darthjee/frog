@@ -3,13 +3,8 @@ var _ = require("underscore");
 
 function redirecter(config){
   redirecter = this;
-  redirecter.config = _.extend({
-    port:3330,
-    proxy: {
-      host: "localhost",
-      port: 80
-    }
-  }, config);
+  
+  redirecter.configure.apply(arguments, redirecter);
    
   redirecter.server = http.createServer(function(request, response){
   	var options = {
@@ -36,6 +31,18 @@ function redirecter(config){
   });
 
   redirecter.server.listen(redirecter.config.port);
+};
+
+redirecter.prototype.configure = function(config) {
+  redirecter = this;
+  
+  redirecter.config = _.extend({
+    port:3330,
+    proxy: {
+      host: "localhost",
+      port: 80
+    }
+  }, config);
 };
 
 module.exports = function(config){
