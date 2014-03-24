@@ -43,6 +43,10 @@ redirecter.prototype.configure = function(config) {
       port: 80
     }
   }, config);
+  
+  redirecter.middlewares = [];
+  for (var i = 1; i < arguments.lenght; i++)
+    redirecter.middlewares.push(arguments[i]);
 };
 
 module.exports = function(config){
