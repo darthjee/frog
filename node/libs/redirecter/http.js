@@ -1,7 +1,17 @@
 var http = require('http');
 var _ = require("underscore");
 
-function Redirecter(){
+function as_array(value){
+  if (value === undefined || value === null)
+    return [];
+  if (value.constructor == Array)
+    return value;
+  return [value];
+}
+
+function Redirecter(config){
+  this.configure.call(this, config);
+  this.create_server();
 };
 
 Redirecter.prototype.configure = function(config) {
@@ -12,12 +22,11 @@ Redirecter.prototype.configure = function(config) {
     proxy: {
       host: "localhost",
       port: 80
-    }
+    },
+    before:[]
   }, config);
   
-  redirecter.middlewares = [];
-  for (var i = 1; i < arguments.length; i++)
-    redirecter.middlewares.push(arguments[i]);
+  redirecter.before = as_array(config.before);
 };
 
 Redirecter.prototype.create_server = function() {
@@ -32,7 +41,7 @@ Redirecter.prototype.create_server = function() {
       path:request.url
     };
     
-    if (redirecter.apply_middlewares(request, response)) {
+    if (redirecter.apply_before(request, response)) {
       
     var req = http.request(options, function(res) {
       response.writeHead(res.statusCode, res.headers);
@@ -51,11 +60,11 @@ Redirecter.prototype.create_server = function() {
   });
 };
 
-Redirecter.prototype.apply_middlewares = function(request, response){
+Redirecter.prototype.apply_before = function(request, response){
   redirecter = this;
   
-  for (var i = 0; i < redirecter.middlewares.length; i++){
-    if (! redirecter.middlewares[i].call(redirecter, request, response))
+  for (var i = 0; i < redirecter.before.length; i++){
+    if (! redirecter.before[i].call(redirecter, request, response))
       return false;
   }
   return true;
@@ -65,10 +74,8 @@ Redirecter.prototype.listen = function() {
   this.server.listen(this.config.port);
 };
 
-module.exports = function(){
-  redirecter = new Redirecter();
-  redirecter.configure.apply(redirecter, arguments);
-  redirecter.create_server();
+module.exports = function(config){
+  redirecter = new Redirecter(config);
   return redirecter;
 };
 
