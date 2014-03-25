@@ -1,3 +1,5 @@
 redirecter = require('./libs/redirecter/http.js');
 
-redirecter().listen();
+redirecter({}, function(request, response){
+  return true;
+}).listen();
