@@ -37,7 +37,7 @@ Redirecter.prototype.create_server = function() {
       headers:request.headers,
       hostname: redirecter.config.proxy.host,  
       port: redirecter.config.proxy.port,
-      method: "get",
+      method: request.method,
       path:request.url
     };
     
