@@ -34,7 +34,7 @@ Redirecter.prototype.create_server = function() {
    
   redirecter.server = http.createServer(function(request, response){
     var options = {
-      headers:request.headers,
+      //headers:request.headers,
       hostname: redirecter.config.proxy.host,  
       port: redirecter.config.proxy.port,
       method: request.method,
@@ -42,20 +42,13 @@ Redirecter.prototype.create_server = function() {
     };
     
     if (redirecter.apply_before(request, response)) {
-      
-    var req = http.request(options, function(res) {
-      response.writeHead(res.statusCode, res.headers);
-
-      res.on('data', function (chunk) {
-        response.write(chunk);
+      var req = http.request(options, function (res) {
+        res.pipe(response, {
+          end: true
+        });
       });
-
-      res.on('end', function() {
-        response.end();
-      });
-    });
     
-    req.end();
+      request.pipe(req);
     }
   });
 };
