@@ -5,7 +5,7 @@ gem 'rails', '3.2.12'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
-gem "mongo_mapper"
+gem "mongo_mapper", '~> 0.13.0'
 gem "bson_ext"
 gem 'execjs'
 gem 'therubyracer'
