@@ -54,4 +54,5 @@ end
 
 group :development do
   gem 'rubycritic', '~> 1.1.1'
+  gem 'rubocop', '~> 0.23.0', require: false
 end
