@@ -1,0 +1,15 @@
+PreCommit:
+  ALL:
+    exclude: 'vendor/**'
+  TrailingWhitespace:
+    required: true
+  HardTabs:
+    required: true
+  YamlSyntax:
+    required: true
+  Jscs:
+    required: false
+  JsHint:
+    required: false
+  LocalPathsInGemfile:
+    enabled: false

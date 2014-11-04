@@ -42,3 +42,17 @@ gem 'jquery-rails'
 
 # To use debugger
 # gem 'debugger'
+
+group :test do
+  gem 'simplecov', '~> 0.9.1'
+end
+
+group :development, :test do
+  gem 'rspec-rails', '~> 3.0.0'
+end
+
+group :development do
+  gem 'rubycritic', '~> 1.1.1'
+  gem 'rubocop', '~> 0.23.0', require: false
+  gem 'pry-rails'
+end
