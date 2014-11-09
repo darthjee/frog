@@ -4,6 +4,6 @@ module Proxy
 
     key :name, String
     key :port, Numeric
-    has_one :target, class: ServerProxy::Target
+    has_one :target, class: ::Proxy::Target
   end
 end
