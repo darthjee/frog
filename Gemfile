@@ -12,6 +12,7 @@ gem 'therubyracer'
 
 group :development, :test do
   gem 'debugger'
+  gem 'webmock'
 end
 
 # Gems used only for assets and not required
