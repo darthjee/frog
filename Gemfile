@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.12'
+ruby '2.0.0'
+gem 'rails', '~> 4.1.4'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -18,13 +19,13 @@ end
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
-  gem 'sass-rails',   '~> 3.2.3'
-  gem 'coffee-rails', '~> 3.2.1'
+  gem 'sass-rails', '~> 4.0.4'
+  gem 'coffee-rails'
 
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
   # gem 'therubyracer', :platforms => :ruby
 
-  gem 'uglifier', '>= 1.0.3'
+  gem 'uglifier'
 end
 
 gem 'jquery-rails'
@@ -45,15 +46,15 @@ gem 'jquery-rails'
 # gem 'debugger'
 
 group :test do
-  gem 'simplecov', '~> 0.9.1'
+  gem 'simplecov'
 end
 
 group :development, :test do
-  gem 'rspec-rails', '~> 3.0.0'
+  gem 'rspec-rails'
 end
 
 group :development do
-  gem 'rubycritic', '~> 1.1.1'
-  gem 'rubocop', '~> 0.23.0', require: false
+  gem 'rubycritic'
+  gem 'rubocop', require: false
   gem 'pry-rails'
 end
