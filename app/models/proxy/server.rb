@@ -1,9 +1,7 @@
 module Proxy
   class Server
-    include MongoMapper::Document
-
-    key :name, String
-    key :port, Numeric
-    has_one :target, class: ::Proxy::Target
+    include Mongoid::Document
+    field :name, type: String
+    field :port, type: Numeric
   end
 end

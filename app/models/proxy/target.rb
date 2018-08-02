@@ -1,8 +1,8 @@
 module Proxy
   class Target
-    include MongoMapper::EmbeddedDocument
+    include Mongoid::Documet
 
-    key :host, String
-    key :port, Numeric
+    field :host, type: String
+    field :port, type: Numeric
   end
 end
