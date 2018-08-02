@@ -1,0 +1,55 @@
+version: '2'
+services:
+  frog_postgres:
+    image: postgres:9.5
+    container_name: frog_postgres
+    env_file: .env
+    environment:
+      POSTGRES_USER: frog
+      POSTGRES_PASSWORD: frog
+    ports:
+      - 127.0.0.1:$FROG_POSTGRES_PORT:5432
+
+  #################### Base  ####################
+
+  base: &base
+    build: .
+    env_file: .env
+    links:
+      - frog_postgres:postgres
+    volumes:
+      - .:/home/app/frog
+      - frog_gems_2_4_0:/usr/local/bundle
+
+  #################### CONTAINERS ####################
+
+  frog_app:
+    <<: *base
+    container_name: frog_app
+    command: /bin/bash bin/server.sh
+    ports:
+      - 127.0.0.1:3000:3000
+    environment:
+      - RAILS_ENV=development
+      - FROG_POSTGRES_PORT=5432
+
+  frog_tests:
+    <<: *base
+    container_name: frog_tests
+    command: /bin/bash bin/tests.sh
+    environment:
+      - RAILS_ENV=test
+
+  frog_root:
+    <<: *base
+    user: root
+    container_name: frog_root
+    command: /bin/bash
+
+networks:
+  default:
+    external:
+      name: frog
+
+volumes:
+  frog_gems_2_4_0:
