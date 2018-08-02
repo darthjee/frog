@@ -1,6 +1,6 @@
 module Proxy
   class Target
-    include Mongoid::Documet
+    include Mongoid::Document
 
     field :host, type: String
     field :port, type: Numeric
