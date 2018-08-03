@@ -47,7 +47,7 @@ services:
     links:
       - frog_mongo:mongo
     volumes:
-      - ./node:/home/app/app
+      - ./node:/home/node/app
 
   ################## Rails CONTAINERS #################
 

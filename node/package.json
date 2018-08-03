@@ -1,9 +1,9 @@
 {
-  "name" : "frog",
-  "description" : "middleware proxxy",
-  "author" : "Fernando 'darthjee' Favini",
-  "version" : "0.1.0",
-  "dependencies" : {
-    "underscore" : "~1.6.x"
+  "name": "frog",
+  "description": "middleware proxxy",
+  "author": "Fernando 'darthjee' Favini",
+  "version": "0.1.0",
+  "dependencies": {
+    "underscore": "~1.6.x"
   }
 }

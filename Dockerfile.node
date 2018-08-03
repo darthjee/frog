@@ -1,2 +1,10 @@
 FROM node:10.8
 
+USER node
+RUN mkdir -p /home/node/app
+WORKDIR /home/node/app
+
+ADD node/package.json  /home/node/app
+
+RUN npm install
+
