@@ -27,7 +27,7 @@ services:
 
   #################### Base  ####################
 
-  base: &base
+  base_rails: &base_rails
     build:
       context: ./
       dockerfile: Dockerfile.rails
@@ -39,11 +39,21 @@ services:
       - .:/home/app/app
       - frog_gems_2_4_0:/usr/local/bundle
 
-  #################### CONTAINERS ####################
+  base_node: &base_node
+    build:
+      context: ./
+      dockerfile: Dockerfile.node
+    env_file: .env
+    links:
+      - frog_mongo:mongo
+    volumes:
+      - ./node:/home/app/app
 
-  frog_app:
-    <<: *base
-    container_name: frog_app
+  ################## Rails CONTAINERS #################
+
+  frog_rails_app:
+    <<: *base_rails
+    container_name: frog_rails_app
     command: /bin/bash bin/server.sh
     ports:
       - 0.0.0.0:3000:3000
@@ -52,18 +62,27 @@ services:
       - FROG_POSTGRES_PORT=5432
       - FROG_MONGO_PORT=27017
 
-  frog_tests:
-    <<: *base
-    container_name: frog_tests
+  frog_rails_tests:
+    <<: *base_rails
+    container_name: frog_rails_tests
     command: /bin/bash bin/tests.sh
     environment:
       - RAILS_ENV=test
 
-  frog_root:
-    <<: *base
+  frog_rails_root:
+    <<: *base_rails
     user: root
-    container_name: frog_root
+    container_name: frog_rails_root
     command: /bin/bash
+
+  ################# Node CONTAINERS ###################
+
+  frog_node_app:
+    <<: *base_node
+    container_name: frog_node_app
+    command: /bin/bash
+    ports:
+      - 0.0.0.0:3000:3000
 
 networks:
   default:
