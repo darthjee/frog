@@ -31,6 +31,7 @@ gem 'newrelic_rpm'
 gem 'sinclair'
 gem 'rake', '>= 12.3'
 gem 'azeroth', '>= 0.0.2'
+gem 'faraday'
 
 group :development, :test do
   gem 'factory_bot'
