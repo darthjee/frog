@@ -28,7 +28,9 @@ services:
   #################### Base  ####################
 
   base: &base
-    build: .
+    build:
+      context: ./
+      dockerfile: Dockerfile.rails
     env_file: .env
     links:
       - frog_postgres:postgres
