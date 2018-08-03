@@ -6,6 +6,8 @@ services:
     env_file: .env
     ports:
       - 127.0.0.1:$FROG_MONGO_PORT:27017
+    volumes:
+      - frog_mongo_server_database:/data/db
   frog_postgres:
     image: postgres:9.5
     container_name: frog_postgres
@@ -15,6 +17,13 @@ services:
       POSTGRES_PASSWORD: frog
     ports:
       - 127.0.0.1:$FROG_POSTGRES_PORT:5432
+  frog_mongo_console:
+    image: mongo:3.4
+    container_name: frog_mongo_console
+    env_file: .env
+    command: mongo --host server
+    links:
+      - frog_mongo:server
 
   #################### Base  ####################
 
@@ -61,3 +70,4 @@ networks:
 
 volumes:
   frog_gems_2_4_0:
+  frog_mongo_server_database:
