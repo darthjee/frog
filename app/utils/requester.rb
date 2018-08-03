@@ -36,8 +36,12 @@ class Requester
 
   def build_connector
     Faraday.new(url: url) do |faraday|
-      faraday.request  :url_encoded
-      faraday.adapter  Faraday.default_adapter
+      faraday.request :url_encoded
+      faraday.adapter Faraday.default_adapter
+
+      headers&.each do |key, value|
+        faraday.headers[key] = value
+      end
     end
   end
 end
