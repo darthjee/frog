@@ -8,11 +8,11 @@
 /.bundle
 
 # Ignore the default SQLite database.
-/db/*.sqlite3
-/db/*.sqlite3-journal
+/rails/db/*.sqlite3
+/rails/db/*.sqlite3-journal
 
 # Ignore all logfiles and tempfiles.
-/log/*.log
-/tmp
+/rails/log/*.log
+/rails/tmp
 /node/node_modules
-/coverage
+/rails/coverage

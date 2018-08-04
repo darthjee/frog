@@ -36,7 +36,7 @@ services:
       - frog_postgres:postgres
       - frog_mongo:mongo
     volumes:
-      - .:/home/app/app
+      - ./rails:/home/app/app
       - frog_gems_2_4_0:/usr/local/bundle
 
   base_node: &base_node
