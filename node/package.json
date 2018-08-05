@@ -5,5 +5,9 @@
   "version": "0.1.0",
   "dependencies": {
     "underscore": "~1.6.x"
+  },
+  "devDependencies": {
+    "jasmin": "latest",
+    "express": "latest"
   }
 }
