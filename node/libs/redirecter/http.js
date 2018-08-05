@@ -1,6 +1,18 @@
 var http = require('http');
 var _ = require("underscore");
 
+/**
+ * Wraps value in array
+ *
+ * @example
+ *   as_array() # returns []
+ *
+ * @example
+ *   as_array(1) # returns [1]
+ *
+ * @example
+ *   as_array([1]) # returns [1]
+ */
 function as_array(value){
   if (value === undefined || value === null)
     return [];
@@ -9,14 +21,20 @@ function as_array(value){
   return [value];
 }
 
+/**
+ * Class responsible for tunnelling requests
+ */
 function Redirecter(config){
   this.configure.call(this, config);
   this.create_server();
 };
 
+/**
+ * Configure redirecter
+ */
 Redirecter.prototype.configure = function(config) {
   redirecter = this;
-  
+
   redirecter.config = _.extend({
     port:3330,
     proxy: {
@@ -25,37 +43,43 @@ Redirecter.prototype.configure = function(config) {
     },
     before:[]
   }, config);
-  
+
   redirecter.before = as_array(config.before);
 };
 
+/**
+ * Initiate server
+ */
 Redirecter.prototype.create_server = function() {
   redirecter = this;
-   
+
   redirecter.server = http.createServer(function(request, response){
     var options = {
       //headers:request.headers,
-      hostname: redirecter.config.proxy.host,  
+      hostname: redirecter.config.proxy.host,
       port: redirecter.config.proxy.port,
       method: request.method,
       path:request.url
     };
-    
+
     if (redirecter.apply_before(request, response)) {
       var req = http.request(options, function (res) {
         res.pipe(response, {
           end: true
         });
       });
-    
+
       request.pipe(req);
     }
   });
 };
 
+/**
+ * Run before scripts on request
+ */
 Redirecter.prototype.apply_before = function(request, response){
   redirecter = this;
-  
+
   for (var i = 0; i < redirecter.before.length; i++){
     if (! redirecter.before[i].call(redirecter, request, response))
       return false;
@@ -63,6 +87,9 @@ Redirecter.prototype.apply_before = function(request, response){
   return true;
 };
 
+/**
+ * Listen to port
+ */
 Redirecter.prototype.listen = function() {
   this.server.listen(this.config.port);
 };
