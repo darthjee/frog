@@ -48,6 +48,8 @@ services:
       - frog_mongo:mongo
     volumes:
       - ./node:/home/node/app
+      - frog_node_modules:/usr/local/lib/node_modules/
+      - frog_node_binaries:/usr/local/bin/
 
   ################## Rails CONTAINERS #################
 
@@ -97,4 +99,6 @@ networks:
 
 volumes:
   frog_gems_2_4_0:
+  frog_node_modules:
+  frog_node_binaries:
   frog_mongo_server_database:
