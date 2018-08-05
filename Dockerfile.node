@@ -1,7 +1,11 @@
 FROM node:10.8
 
+RUN mkdir -p /home/node/app; \
+    chown node -R /home/node; \
+    npm install -g jsdoc
+
 USER node
-RUN mkdir -p /home/node/app
+
 WORKDIR /home/node/app
 
 ADD node/package.json  /home/node/app
