@@ -14,5 +14,7 @@
 # Ignore all logfiles and tempfiles.
 /rails/log/*.log
 /rails/tmp
-/node/node_modules
 /rails/coverage
+
+/node/node_modules
+/node/out
