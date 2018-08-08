@@ -3,20 +3,23 @@ var http = require('http'),
 
 class DummyServer {
   constructor() {
+    _.bindAll(this, '_handleRequest');
+
     this.server = http.createServer(this._handleRequest);
+    this.body = 'data';
+    this.statusCode = 200;
+    this.headers = { 'Content-Type': 'text/plain' };
+    this.port = 3000;
   }
 
   _handleRequest(request, response) {
-    response.writeHead(200, { 'Content-Type': 'text/plain' });
-    response.write('-------------------------------------------------ok\n');
-    response.write('-------------------------------------------------dok\n');
-    console.info('finishing');
-    response.end('data');
-    console.info('finished');
+    response.writeHead(this.statusCode, this.headers);
+    response.write(this.body);
+    response.end();
   }
 
   start() {
-    this.server.listen(3000);
+    this.server.listen(this.port);
   }
 
   stop() {

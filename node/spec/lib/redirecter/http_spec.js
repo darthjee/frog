@@ -11,6 +11,10 @@ describe('Redirecter::Http', function() {
   beforeAll(function(){
     server = new DummyServer();
     server.start();
+    client = new EasyClient({
+      hostname: 'localhost',
+      port: 3000
+    });
   });
 
   afterAll(function() {
@@ -22,14 +26,11 @@ describe('Redirecter::Http', function() {
     subject.listen();
   });
 
-  it('a', function() {
-    new EasyClient({
-      hostname: 'localhost',
-      port: 3000
-    }).call(
-      function(data) {
+  describe('when performing a get request', function() {
+    it('request to server', function() {
+      client.call(function(data) {
         console.info(data);
-      }
-    );
+      });
+    });
   });
 });
