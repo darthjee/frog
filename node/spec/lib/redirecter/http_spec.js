@@ -2,6 +2,7 @@
 describe('Redirecter::Http', function() {
   var RedirecterHttp = require('../../../lib/redirecter/http'),
       DummyServer = require('../../support/dummy_server'),
+      EasyClient = require('../../support/easy_client'),
       Http = require('http'),
       config = {},
       server,
@@ -22,19 +23,13 @@ describe('Redirecter::Http', function() {
   });
 
   it('a', function() {
-    var a = Http.request({
+    new EasyClient({
       hostname: 'localhost',
       port: 3000
-    }).on('response', function(response) {
-      response.on('data', function(buffer, a) {
-        console.info('buffer');
-        console.info(buffer.toString());
-      });
-      response.on('end', function() {
-        console.info('ended');
-      });
-    }).end(function() {
-      console.info('hey');
-    });
+    }).call(
+      function(data) {
+        console.info(data);
+      }
+    );
   });
 });
