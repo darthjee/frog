@@ -26,7 +26,6 @@ function as_array(value){
  */
 function Redirecter(config){
   this.configure.call(this, config);
-  this.create_server();
 };
 
 /**
@@ -50,7 +49,7 @@ Redirecter.prototype.configure = function(config) {
 /**
  * Initiate server
  */
-Redirecter.prototype.create_server = function() {
+Redirecter.prototype.createServer = function() {
   redirecter = this;
 
   redirecter.server = http.createServer(function(request, response){
@@ -91,6 +90,7 @@ Redirecter.prototype.apply_before = function(request, response){
  * Listen to port
  */
 Redirecter.prototype.listen = function() {
+  this.createServer();
   this.server.listen(this.config.port);
 };
 
