@@ -1,10 +1,8 @@
-
 describe('Redirecter::Http', function() {
   var RedirecterHttp = require('../../../lib/redirecter/http'),
       DummyServer = require('../../support/dummy_server'),
       EasyClient = require('../../support/easy_client'),
       Http = require('http'),
-      config = {},
       server,
       subject;
 
@@ -15,6 +13,7 @@ describe('Redirecter::Http', function() {
       hostname: 'localhost',
       port: 3000
     });
+    this.memorize('config', function() { return {} });
   });
 
   afterAll(function() {
@@ -22,8 +21,10 @@ describe('Redirecter::Http', function() {
   });
 
   beforeEach(function() {
-    subject = new RedirecterHttp(config);
-    subject.listen();
+    this.memorize('subject', function() {
+      return RedirecterHttp(this.config());
+    });
+    this.memorized('subject').listen();
   });
 
   describe('when performing a get request', function() {
