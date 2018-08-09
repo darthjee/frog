@@ -13,7 +13,7 @@ describe('Redirecter::Http', function() {
       hostname: 'localhost',
       port: 3000
     });
-    this.memorize('config', function() { return {} });
+    this.memorize('config', {});
   });
 
   afterAll(function() {
