@@ -28,10 +28,6 @@ describe('Redirecter::Http', function() {
     });
   });
 
-  afterAll(function() {
-    server.stop();
-  });
-
   beforeEach(function() {
     this.memorize('subject', function() {
       return RedirecterHttp(this.config());
