@@ -10,7 +10,8 @@ function enhanceContext(context) {
     },
     memorize: function(key, func) {
       if (func.constructor != Function) {
-        func = function() { return func };
+        var value = func;
+        func = function() { return value };
       }
       this.getMemorizedMap()[key] = func;
     },

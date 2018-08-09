@@ -9,11 +9,23 @@ describe('Redirecter::Http', function() {
   beforeAll(function(){
     server = new DummyServer();
     server.start();
-    client = new EasyClient({
-      hostname: 'localhost',
-      port: 3000
+    this.memorize('client', function() {
+      return new EasyClient({
+        hostname: 'localhost',
+        port: this.port()
+      });
     });
-    this.memorize('config', {});
+    this.memorize('port', 3300);
+    this.memorize('serverPort', 3000);
+    this.memorize('config', function() {
+      return {
+        port: this.port(),
+        proxy: {
+          host: 'localhost',
+          port: this.serverPort()
+        }
+      };
+    });
   });
 
   afterAll(function() {
@@ -29,7 +41,7 @@ describe('Redirecter::Http', function() {
 
   describe('when performing a get request', function() {
     it('request to server', function() {
-      client.call(function(data) {
+      this.memorized('client').call(function(data) {
         console.info(data);
       });
     });
