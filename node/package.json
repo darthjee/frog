@@ -7,7 +7,8 @@
     "underscore": "~1.6.x"
   },
   "devDependencies": {
-    "jasmin": "latest",
-    "express": "latest"
+    "jasmine": "latest",
+    "express": "latest",
+    "jasmine-ajax": "latest"
   }
 }
