@@ -9,6 +9,7 @@
   "devDependencies": {
     "jasmine": "latest",
     "express": "latest",
-    "jasmine-ajax": "latest"
+    "jasmine-ajax": "latest",
+    "nock": "latest"
   }
 }
