@@ -43,15 +43,23 @@ describe('Redirecter::Http', function() {
   });
 
   describe('when performing a get request', function() {
-    it('returns the proxied body', function() {
-      this.memorized('client').call(function(response) {
-        expect(response.body).toEqual('data mocked');
+    describe('returning success', function() {
+      it('returns the proxied body', function() {
+        this.memorized('client').call(function(response) {
+          expect(response.body).toEqual('data mocked');
+        });
       });
-    });
 
-    it('returns the proxied headers', function() {
-      this.memorized('client').call(function(response) {
-        expect(response.headers['custom-header']).toEqual('header-value');
+      it('returns the proxied headers', function() {
+        this.memorized('client').call(function(response) {
+          expect(response.headers['custom-header']).toEqual('header-value');
+        });
+      });
+
+      it('returns the proxied status', function() {
+        this.memorized('client').call(function(response) {
+          expect(response.status).toEqual(200);
+        });
       });
     });
   });
