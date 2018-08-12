@@ -63,9 +63,7 @@ Redirecter.prototype.createServer = function() {
 
     if (redirecter.apply_before(request, response)) {
       var req = http.request(options, function (res) {
-        for (k in res.headers) {
-          response.setHeader(k, res.headers[k]);
-        }
+        response.writeHead(res.statusCode,res.headers);
         res.pipe(response, {
           end: true
         });
