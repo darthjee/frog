@@ -1,14 +1,14 @@
 describe('Redirecter::Http', function() {
+
   var RedirecterHttp = require('../../../lib/redirecter/http'),
       DummyServer = require('../../support/dummy_server'),
       EasyClient = require('../../support/easy_client'),
+      nock = require('nock'),
       Http = require('http'),
       server,
       subject;
 
   beforeAll(function(){
-    server = new DummyServer();
-    server.start();
     this.memorize('client', function() {
       return new EasyClient({
         hostname: 'localhost',
@@ -26,6 +26,8 @@ describe('Redirecter::Http', function() {
         }
       };
     });
+    nock('http://localhost:' + this.memorized('serverPort')).
+      get('/').reply(200, 'data mocked');
   });
 
   beforeEach(function() {
