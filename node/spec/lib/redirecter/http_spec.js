@@ -8,29 +8,10 @@ describe('Redirecter::Http', function() {
       subject;
 
   beforeAll(function(){
-    this.memorize('client', function() {
-      return new EasyClient({
-        hostname: 'localhost',
-        port: this.port()
-      });
-    });
     this.memorize({
       port: 3300,
       serverPort: 3000,
-      status: 200,
-      body: 'data mocked',
-      headers: { 'custom-header': 'header-value' },
-      response: function () {
-        var that = this;
-
-        return function() {
-          return [
-            that.status(),
-            that.body(),
-            that.headers()
-          ]
-        };
-      },
+      path: '/success',
       config: function() {
         return {
           port: this.port(),
@@ -39,14 +20,20 @@ describe('Redirecter::Http', function() {
             port: this.serverPort()
           }
         };
+      },
+      client: function() {
+        return new EasyClient({
+          hostname: 'localhost',
+          port: this.port(),
+          path: this.path()
+        });
+      },
+      subject: function() {
+        return RedirecterHttp(this.config());
       }
     });
-    this.memorize('subject', function() {
-      return RedirecterHttp(this.config());
-    });
+
     this.memorized('subject').listen();
-    nock('http://localhost:' + this.memorized('serverPort')).
-      get('/').reply(this.memorized('response'));
   });
 
   afterAll(function() {
@@ -56,16 +43,22 @@ describe('Redirecter::Http', function() {
   describe('when performing a get request', function() {
     describe('returning success', function() {
       beforeAll(function(done) {
-        var that = this;
+        this.memorize('path', '/success');
+        var context = this;
+
+        nock('http://localhost:' + this.memorized('serverPort')).
+          get(/.*/).reply(200, 'success data', {
+            'custom-header': 'header-value'
+          });
 
         this.memorized('client').call(function(response) {
-          that.response = response;
+          context.response = response;
           done();
         })
       });
 
       it('returns the proxied body', function() {
-        expect(this.response.body).toEqual('data mocked');
+        expect(this.response.body).toEqual('success data');
       });
 
       it('returns the proxied headers', function() {
@@ -74,6 +67,29 @@ describe('Redirecter::Http', function() {
 
       it('returns the proxied status', function() {
         expect(this.response.status).toEqual(200);
+      });
+    });
+
+    describe('returning success', function() {
+      beforeAll(function(done) {
+        this.memorize('path', '/error');
+        var context = this;
+
+        nock('http://localhost:' + this.memorized('serverPort')).
+          get(/.*/).reply(500, 'error data');
+
+        this.memorized('client').call(function(response) {
+          context.response = response;
+          done();
+        })
+      });
+
+      it('returns the proxied body', function() {
+        expect(this.response.body).toEqual('error data');
+      });
+
+      it('returns the proxied status', function() {
+        expect(this.response.status).toEqual(500);
       });
     });
   });
