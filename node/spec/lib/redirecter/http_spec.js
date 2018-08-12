@@ -21,11 +21,15 @@ describe('Redirecter::Http', function() {
       body: 'data mocked',
       headers: { 'custom-header': 'header-value' },
       response: function () {
-        return [
-          this.status(),
-          this.body(),
-          this.headers()
-        ]
+        var that = this;
+
+        return function() {
+          return [
+            that.status(),
+            that.body(),
+            that.headers()
+          ]
+        };
       },
       config: function() {
         return {
@@ -37,9 +41,6 @@ describe('Redirecter::Http', function() {
         };
       }
     });
-  });
-
-  beforeEach(function() {
     this.memorize('subject', function() {
       return RedirecterHttp(this.config());
     });
@@ -48,28 +49,31 @@ describe('Redirecter::Http', function() {
       get('/').reply(this.memorized('response'));
   });
 
-  afterEach(function() {
+  afterAll(function() {
     this.memorized('subject').stop();
   });
 
   describe('when performing a get request', function() {
     describe('returning success', function() {
-      it('returns the proxied body', function() {
+      beforeAll(function(done) {
+        var that = this;
+
         this.memorized('client').call(function(response) {
-          expect(response.body).toEqual('data mocked');
-        });
+          that.response = response;
+          done();
+        })
+      });
+
+      it('returns the proxied body', function() {
+        expect(this.response.body).toEqual('data mocked');
       });
 
       it('returns the proxied headers', function() {
-        this.memorized('client').call(function(response) {
-          expect(response.headers['custom-header']).toEqual('header-value');
-        });
+        expect(this.response.headers['custom-header']).toEqual('header-value');
       });
 
       it('returns the proxied status', function() {
-        this.memorized('client').call(function(response) {
-          expect(response.status).toEqual(200);
-        });
+        expect(this.response.status).toEqual(200);
       });
     });
   });
