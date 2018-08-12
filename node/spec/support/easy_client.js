@@ -22,7 +22,8 @@ class EasyClient {
         }
         success({
           headers: response.headers,
-          body: data
+          body: data,
+          status: response.statusCode
         });
       });
     }).end();
