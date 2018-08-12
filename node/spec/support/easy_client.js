@@ -21,6 +21,7 @@ class EasyClient {
           data = data.concat(buffer.toString());
         }
         success({
+          headers: response.headers,
           body: data
         });
       });
