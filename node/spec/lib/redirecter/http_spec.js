@@ -1,7 +1,6 @@
 describe('Redirecter::Http', function() {
 
   var RedirecterHttp = require('../../../lib/redirecter/http'),
-      DummyServer = require('../../support/dummy_server'),
       EasyClient = require('../../support/easy_client'),
       nock = require('nock'),
       Http = require('http'),

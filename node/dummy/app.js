@@ -1,8 +1,8 @@
 console.info('Starting this thing');
 
-var Server = require('./spec/support/dummy_server');
-var EasyClient = require('./spec/support/easy_client');
-var RedirecterHttp = require('./lib/redirecter/http');
+var Server = require('./dummy_server');
+var EasyClient = require('../spec/support/easy_client');
+var RedirecterHttp = require('../lib/redirecter/http');
 
 new Server().start();
 
