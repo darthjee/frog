@@ -1,12 +1,6 @@
-FROM node:10.8
-
-RUN mkdir -p /home/node/app; \
-    chown node -R /home/node; \
-    npm install -g jsdoc jasmine
+FROM darthjee/node:0.0.1
 
 USER node
-
-WORKDIR /home/node/app
 
 ADD node/package.json  /home/node/app
 
