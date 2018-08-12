@@ -8,12 +8,25 @@ function enhanceContext(context) {
       }
       return this.memorizedMap;
     },
-    memorize: function(key, func) {
+    memorizeValue: function(key, func) {
       if (func.constructor != Function) {
         var value = func;
         func = function() { return value };
       }
       this.getMemorizedMap()[key] = func;
+    },
+    memorizeAll: function(values) {
+      var that = this;
+      _.each(values, function(func, key) {
+        that.memorizeValue(key, func);
+      });
+    },
+    memorize: function() {
+      if(arguments[0].constructor == Object) {
+        return this.memorizeAll.apply(this, arguments);
+      } else {
+        return this.memorizeValue.apply(this, arguments);
+      }
     },
     memorized: function(key) {
       var value = this.getMemorizedMap()[key]();

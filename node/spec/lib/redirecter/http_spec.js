@@ -14,16 +14,18 @@ describe('Redirecter::Http', function() {
         port: this.port()
       });
     });
-    this.memorize('port', 3300);
-    this.memorize('serverPort', 3000);
-    this.memorize('config', function() {
-      return {
-        port: this.port(),
-        proxy: {
-          host: 'localhost',
-          port: this.serverPort()
-        }
-      };
+    this.memorize({
+      port: 3300,
+      serverPort: 3000,
+      config: function() {
+        return {
+          port: this.port(),
+          proxy: {
+            host: 'localhost',
+            port: this.serverPort()
+          }
+        };
+      }
     });
   });
 
