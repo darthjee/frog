@@ -20,7 +20,9 @@ class EasyClient {
         if (buffer) {
           data = data.concat(buffer.toString());
         }
-        success(data);
+        success({
+          body: data
+        });
       });
     }).end();
   }

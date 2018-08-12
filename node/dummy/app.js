@@ -23,6 +23,6 @@ var redirect = RedirecterHttp(config);
 
 redirect.listen();
 
-client.call(function(data) {
-  console.info(data);
+client.call(function(response) {
+  console.info(response.body);
 });

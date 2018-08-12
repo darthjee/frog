@@ -26,7 +26,9 @@ describe('Redirecter::Http', function() {
       };
     });
     nock('http://localhost:' + this.memorized('serverPort')).
-      get('/').reply(200, 'data mocked');
+      get('/').reply(function() {
+        return [200, 'data mocked', { 'custom-header': 'header-value' }]
+      });
   });
 
   beforeEach(function() {
@@ -37,9 +39,9 @@ describe('Redirecter::Http', function() {
   });
 
   describe('when performing a get request', function() {
-    it('request to server', function() {
-      this.memorized('client').call(function(data) {
-        console.info(data);
+    it('returns the proxied body', function() {
+      this.memorized('client').call(function(response) {
+        expect(response.body).toEqual('data mocked');
       });
     });
   });
