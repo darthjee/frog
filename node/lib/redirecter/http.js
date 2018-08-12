@@ -97,6 +97,13 @@ Redirecter.prototype.listen = function() {
   this.server.listen(this.config.port);
 };
 
+/**
+ * Stops listening
+ */
+Redirecter.prototype.stop = function() {
+  this.server.close();
+}
+
 module.exports = function(config){
   redirecter = new Redirecter(config);
   return redirecter;

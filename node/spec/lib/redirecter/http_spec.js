@@ -38,6 +38,10 @@ describe('Redirecter::Http', function() {
       });
   });
 
+  afterEach(function() {
+    this.memorized('subject').stop();
+  });
+
   describe('when performing a get request', function() {
     it('returns the proxied body', function() {
       this.memorized('client').call(function(response) {
