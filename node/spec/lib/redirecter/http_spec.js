@@ -17,6 +17,16 @@ describe('Redirecter::Http', function() {
     this.memorize({
       port: 3300,
       serverPort: 3000,
+      status: 200,
+      body: 'data mocked',
+      headers: { 'custom-header': 'header-value' },
+      response: function () {
+        return [
+          this.status(),
+          this.body(),
+          this.headers()
+        ]
+      },
       config: function() {
         return {
           port: this.port(),
@@ -35,9 +45,7 @@ describe('Redirecter::Http', function() {
     });
     this.memorized('subject').listen();
     nock('http://localhost:' + this.memorized('serverPort')).
-      get('/').reply(function() {
-        return [200, 'data mocked', { 'custom-header': 'header-value' }]
-      });
+      get('/').reply(this.memorized('response'));
   });
 
   afterEach(function() {
