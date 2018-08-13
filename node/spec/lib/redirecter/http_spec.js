@@ -75,7 +75,7 @@ describe('Redirecter::Http', function() {
       });
     });
 
-    describe('returning success', function() {
+    describe('returning error', function() {
       beforeAll(function(done) {
         this.memorize('path', '/error');
         var context = this;
