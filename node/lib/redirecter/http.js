@@ -24,82 +24,84 @@ function as_array(value){
 /**
  * Class responsible for tunnelling requests
  */
-function Redirecter(config){
-  this.configure.call(this, config);
-};
-
-/**
- * Configure redirecter
- */
-Redirecter.prototype.configure = function(config) {
-  redirecter = this;
-
-  redirecter.config = _.extend({
-    port:3330,
-    proxy: {
-      host: "localhost",
-      port: 80
-    },
-    before:[]
-  }, config);
-
-  redirecter.before = as_array(config.before);
-};
-
-/**
- * Initiate server
- */
-Redirecter.prototype.createServer = function() {
-  redirecter = this;
-
-  redirecter.server = http.createServer(function(request, response){
-    var options = {
-      headers:request.headers,
-      hostname: redirecter.config.proxy.host,
-      port: redirecter.config.proxy.port,
-      method: request.method,
-      path:request.url
-    };
-
-    if (redirecter.apply_before(request, response)) {
-      var req = http.request(options, function (res) {
-        response.writeHead(res.statusCode,res.headers);
-        res.pipe(response, {
-          end: true
-        });
-      });
-
-      request.pipe(req);
-    }
-  });
-};
-
-/**
- * Run before scripts on request
- */
-Redirecter.prototype.apply_before = function(request, response){
-  redirecter = this;
-
-  for (var i = 0; i < redirecter.before.length; i++){
-    if (! redirecter.before[i].call(redirecter, request, response))
-      return false;
+class Redirecter {
+  constructor(config) {
+    this.configure.call(this, config);
   }
-  return true;
-};
 
-/**
- * Listen to port
- */
-Redirecter.prototype.listen = function() {
-  this.createServer();
-  this.server.listen(this.config.port);
-};
+  /**
+   * Configure redirecter
+   */
+  configure(config) {
+    let redirecter = this;
 
-/**
- * Stops listening
- */
-Redirecter.prototype.stop = function() {
-  this.server.close();
+    redirecter.config = _.extend({
+      port:3330,
+      proxy: {
+        host: "localhost",
+        port: 80
+      },
+      before:[]
+    }, config);
+
+    redirecter.before = as_array(config.before);
+  }
+
+  /**
+   * Initiate server
+   */
+  createServer() {
+    let redirecter = this;
+
+    redirecter.server = http.createServer(function(request, response){
+      var options = {
+        headers:request.headers,
+        hostname: redirecter.config.proxy.host,
+        port: redirecter.config.proxy.port,
+        method: request.method,
+        path:request.url
+      };
+
+      if (redirecter.apply_before(request, response)) {
+        var req = http.request(options, function (res) {
+          response.writeHead(res.statusCode,res.headers);
+          res.pipe(response, {
+            end: true
+          });
+        });
+
+        request.pipe(req);
+      }
+    });
+  }
+
+  /**
+   * Run before scripts on request
+   */
+  apply_before(request, response){
+    let redirecter = this;
+
+    for (var i = 0; i < redirecter.before.length; i++){
+      if (! redirecter.before[i].call(redirecter, request, response))
+        return false;
+    }
+    return true;
+  }
+
+  /**
+   * Listen to port
+   */
+  listen() {
+    this.createServer();
+    this.server.listen(this.config.port);
+  }
+
+  /**
+   * Stops listening
+   */
+ stop() {
+    this.server.close();
+  }
 }
 
 module.exports = function(config){
