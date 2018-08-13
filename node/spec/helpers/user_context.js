@@ -9,7 +9,7 @@ function enhanceContext(context) {
       return this.memorizedMap;
     },
     memorizeValue: function(key, func) {
-      if (func.constructor != Function) {
+      if (func == null || func.constructor != Function) {
         var value = func;
         func = function() { return value };
       }
@@ -44,10 +44,12 @@ function enhanceContext(context) {
 
     for (var prop in oldContext) {
       if (oldContext.hasOwnProperty(prop)) {
-        if (oldContext[prop].constructor == Object) {
-          context[prop] = UserContext.fromExisting(oldContext[prop]);
+        var oldValue = oldContext[prop];
+
+        if (oldValue != null && oldValue.constructor == Object) {
+          context[prop] = UserContext.fromExisting(oldValue);
         } else {
-          context[prop] = oldContext[prop];
+          context[prop] = oldValue;
         }
       }
     }
