@@ -30,6 +30,9 @@ describe('Redirecter::Http', function() {
       },
       subject: function() {
         return RedirecterHttp(this.config());
+      },
+      nockScope: function() {
+        return nock('http://localhost:' + this.serverPort());
       }
     });
 
@@ -46,8 +49,8 @@ describe('Redirecter::Http', function() {
         this.memorize('path', '/success');
         var context = this;
 
-        nock('http://localhost:' + this.memorized('serverPort')).
-          get(/.*/).reply(200, 'success data', {
+        this.memorized('nockScope').get(/.*/)
+          .reply(200, 'success data', {
             'custom-header': 'header-value'
           });
 
@@ -75,8 +78,8 @@ describe('Redirecter::Http', function() {
         this.memorize('path', '/error');
         var context = this;
 
-        nock('http://localhost:' + this.memorized('serverPort')).
-          get(/.*/).reply(500, 'error data');
+        this.memorized('nockScope').get(/.*/)
+          .reply(500, 'error data');
 
         this.memorized('client').call(function(response) {
           context.response = response;
