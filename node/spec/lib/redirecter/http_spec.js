@@ -25,14 +25,16 @@ describe('Redirecter::Http', function() {
         return new EasyClient({
           hostname: 'localhost',
           port: this.port(),
-          path: this.path()
+          path: this.path(),
+          headers: { 'X-REQUEST': '#ABC' }
         });
       },
       subject: function() {
         return RedirecterHttp(this.config());
       },
       nockScope: function() {
-        return nock('http://localhost:' + this.serverPort());
+        return nock('http://localhost:' + this.serverPort())
+        .matchHeader('X-REQUEST', '#ABC');
       }
     });
 

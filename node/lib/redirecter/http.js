@@ -54,7 +54,7 @@ Redirecter.prototype.createServer = function() {
 
   redirecter.server = http.createServer(function(request, response){
     var options = {
-      //headers:request.headers,
+      headers:request.headers,
       hostname: redirecter.config.proxy.host,
       port: redirecter.config.proxy.port,
       method: request.method,
