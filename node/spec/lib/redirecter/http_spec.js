@@ -12,6 +12,7 @@ describe('Redirecter::Http', function() {
       port: 3300,
       serverPort: 3000,
       path: '/success',
+      requestData: null,
       config: function() {
         return {
           port: this.port(),
@@ -27,7 +28,8 @@ describe('Redirecter::Http', function() {
           port: this.port(),
           path: this.path(),
           method: this.method(),
-          headers: { 'X-REQUEST': '#ABC' }
+          headers: { 'X-REQUEST': '#ABC' },
+          data: this.requestData()
         });
       },
       subject: function() {
@@ -105,7 +107,10 @@ describe('Redirecter::Http', function() {
 
   describe('when performing a POST request', function() {
     beforeAll(function() {
-      this.memorize('method', 'POST');
+      this.memorize({
+        method: 'POST',
+        requestData: '{"id": 1, "name": "json"}'
+      });
     });
     describe('returning success', function() {
       beforeAll(function(done) {
@@ -113,8 +118,11 @@ describe('Redirecter::Http', function() {
         var context = this;
 
         this.memorized('nockScope').post(/.*/)
-          .reply(200, 'success data', {
-            'custom-header': 'header-value'
+          .reply(function(path, data) {
+            context.requestData = data;
+            return [200, 'success data', {
+              'custom-header': 'header-value'
+            }];
           });
 
         this.memorized('client').call(function(response) {
@@ -133,6 +141,10 @@ describe('Redirecter::Http', function() {
 
       it('returns the proxied status', function() {
         expect(this.response.status).toEqual(200);
+      });
+
+      it('foward the data', function() {
+        expect(this.requestData).toEqual('{"id": 1, "name": "json"}');
       });
     });
 
