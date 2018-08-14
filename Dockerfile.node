@@ -1,6 +1,4 @@
-FROM darthjee/node:0.0.1
-
-USER node
+FROM darthjee/node:0.0.2
 
 ADD node/package.json  /home/node/app
 
