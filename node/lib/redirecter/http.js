@@ -83,22 +83,24 @@ class Redirecter {
   }
 
   _pipeRequest(request, response) {
+    request.pipe(this._proxyRequest(request, response));
+  }
+
+  _proxyRequest(request, response) {
     var options = {
-      headers:request.headers,
+      headers:  request.headers,
       hostname: this.config.proxy.host,
-      port: this.config.proxy.port,
-      method: request.method,
-      path:request.url
+      port:     this.config.proxy.port,
+      method:   request.method,
+      path:     request.url
     };
 
-    var req = http.request(options, function (res) {
-      response.writeHead(res.statusCode,res.headers);
+    return http.request(options, function (res) {
+      response.writeHead(res.statusCode, res.headers);
       res.pipe(response, {
         end: true
       });
     });
-
-    request.pipe(req);
   }
 
   /**
