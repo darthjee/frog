@@ -1,4 +1,4 @@
-describe('Redirecter::Http', function() {
+describe('Redirecter::Proxy', function() {
 
   var Proxy = require('../../../lib/redirecter/proxy'),
       EasyClient = require('../../support/easy_client'),

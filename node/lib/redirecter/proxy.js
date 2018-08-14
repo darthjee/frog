@@ -1,25 +1,5 @@
-var http = require('http');
-var _ = require("underscore");
-
-/**
- * Wraps value in array
- *
- * @example
- *   asArray() # returns []
- *
- * @example
- *   asArray(1) # returns [1]
- *
- * @example
- *   asArray([1]) # returns [1]
- */
-function asArray(value){
-  if (value === undefined || value === null)
-    return [];
-  if (value.constructor == Array)
-    return value;
-  return [value];
-}
+var http = require('http'),
+    _ = require("../underscore_ext");
 
 /**
  * Class responsible for tunnelling requests
@@ -61,7 +41,7 @@ class Proxy {
       before:[]
     }, config);
 
-    redirecter.before = asArray(config.before);
+    redirecter.before = _.asArray(config.before);
   }
 
   /**
