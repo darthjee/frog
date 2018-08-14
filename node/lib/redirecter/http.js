@@ -26,6 +26,8 @@ function as_array(value){
  */
 class Redirecter {
   constructor(config) {
+    _.bindAll(this, 'handleRequest');
+
     this.configure.call(this, config);
   }
 
@@ -53,26 +55,31 @@ class Redirecter {
   createServer() {
     let redirecter = this;
 
-    redirecter.server = http.createServer(function(request, response){
-      var options = {
-        headers:request.headers,
-        hostname: redirecter.config.proxy.host,
-        port: redirecter.config.proxy.port,
-        method: request.method,
-        path:request.url
-      };
+    redirecter.server = http.createServer(this.handleRequest);
+  }
 
-      if (redirecter.apply_before(request, response)) {
-        var req = http.request(options, function (res) {
-          response.writeHead(res.statusCode,res.headers);
-          res.pipe(response, {
-            end: true
-          });
+  /**
+   * Handles each request piping it to the proxied server
+   */
+  handleRequest(request, response){
+    var options = {
+      headers:request.headers,
+      hostname: this.config.proxy.host,
+      port: this.config.proxy.port,
+      method: request.method,
+      path:request.url
+    };
+
+    if (this.apply_before(request, response)) {
+      var req = http.request(options, function (res) {
+        response.writeHead(res.statusCode,res.headers);
+        res.pipe(response, {
+          end: true
         });
+      });
 
-        request.pipe(req);
-      }
-    });
+      request.pipe(req);
+    }
   }
 
   /**
