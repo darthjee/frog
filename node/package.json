@@ -4,6 +4,7 @@
   "author": "Fernando 'darthjee' Favini",
   "version": "0.1.0",
   "dependencies": {
+    "lint": "^1.1.2",
     "underscore": "~1.6.x"
   },
   "devDependencies": {
