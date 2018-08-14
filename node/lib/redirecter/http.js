@@ -26,15 +26,30 @@ function asArray(value){
  */
 class Redirecter {
   constructor(config) {
-    _.bindAll(this, 'handleRequest');
+    _.bindAll(this, '_handleRequest');
 
-    this.configure.call(this, config);
+    this._configure.call(this, config);
+  }
+
+  /**
+   * Listen to port
+   */
+  listen() {
+    this._createServer();
+    this.server.listen(this.config.port);
+  }
+
+  /**
+   * Stops listening
+   */
+ stop() {
+    this.server.close();
   }
 
   /**
    * Configure redirecter
    */
-  configure(config) {
+  _configure(config) {
     let redirecter = this;
 
     redirecter.config = _.extend({
@@ -52,16 +67,16 @@ class Redirecter {
   /**
    * Initiate server
    */
-  createServer() {
+  _createServer() {
     let redirecter = this;
 
-    redirecter.server = http.createServer(this.handleRequest);
+    redirecter.server = http.createServer(this._handleRequest);
   }
 
   /**
    * Handles each request piping it to the proxied server
    */
-  handleRequest(request, response){
+  _handleRequest(request, response){
     var options = {
       headers:request.headers,
       hostname: this.config.proxy.host,
@@ -70,7 +85,7 @@ class Redirecter {
       path:request.url
     };
 
-    if (this.applyBefore(request, response)) {
+    if (this._applyBefore(request, response)) {
       var req = http.request(options, function (res) {
         response.writeHead(res.statusCode,res.headers);
         res.pipe(response, {
@@ -85,7 +100,7 @@ class Redirecter {
   /**
    * Run before scripts on request
    */
-  applyBefore(request, response){
+  _applyBefore(request, response){
     let redirecter = this;
 
     for (var i = 0; i < redirecter.before.length; i++){
@@ -93,21 +108,6 @@ class Redirecter {
         return false;
     }
     return true;
-  }
-
-  /**
-   * Listen to port
-   */
-  listen() {
-    this.createServer();
-    this.server.listen(this.config.port);
-  }
-
-  /**
-   * Stops listening
-   */
- stop() {
-    this.server.close();
   }
 }
 
