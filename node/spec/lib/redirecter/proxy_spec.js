@@ -1,6 +1,6 @@
 describe('Redirecter::Http', function() {
 
-  var RedirecterHttp = require('../../../lib/redirecter/http'),
+  var Proxy = require('../../../lib/redirecter/proxy'),
       EasyClient = require('../../support/easy_client'),
       nock = require('nock'),
       Http = require('http'),
@@ -33,7 +33,7 @@ describe('Redirecter::Http', function() {
         });
       },
       subject: function() {
-        return RedirecterHttp(this.config());
+        return Proxy(this.config());
       },
       nockScope: function() {
         return nock('http://localhost:' + this.serverPort())

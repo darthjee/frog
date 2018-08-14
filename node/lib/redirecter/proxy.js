@@ -24,7 +24,7 @@ function asArray(value){
 /**
  * Class responsible for tunnelling requests
  */
-class Redirecter {
+class Proxy {
   constructor(config) {
     _.bindAll(this, '_handleRequest');
 
@@ -118,8 +118,8 @@ class Redirecter {
 }
 
 module.exports = function(config){
-  redirecter = new Redirecter(config);
+  redirecter = new Proxy(config);
   return redirecter;
 };
 
-module.exports.fn = Redirecter.prototype;
+module.exports.fn = Proxy.prototype;

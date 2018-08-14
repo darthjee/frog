@@ -2,7 +2,7 @@ console.info('Starting this thing');
 
 var Server = require('./dummy_server');
 var EasyClient = require('../spec/support/easy_client');
-var RedirecterHttp = require('../lib/redirecter/http');
+var RedirecterHttp = require('../lib/redirecter/proxy');
 
 new Server().start();
 
