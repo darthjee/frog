@@ -5,15 +5,15 @@ var _ = require("underscore");
  * Wraps value in array
  *
  * @example
- *   as_array() # returns []
+ *   asArray() # returns []
  *
  * @example
- *   as_array(1) # returns [1]
+ *   asArray(1) # returns [1]
  *
  * @example
- *   as_array([1]) # returns [1]
+ *   asArray([1]) # returns [1]
  */
-function as_array(value){
+function asArray(value){
   if (value === undefined || value === null)
     return [];
   if (value.constructor == Array)
@@ -46,7 +46,7 @@ class Redirecter {
       before:[]
     }, config);
 
-    redirecter.before = as_array(config.before);
+    redirecter.before = asArray(config.before);
   }
 
   /**
@@ -70,7 +70,7 @@ class Redirecter {
       path:request.url
     };
 
-    if (this.apply_before(request, response)) {
+    if (this.applyBefore(request, response)) {
       var req = http.request(options, function (res) {
         response.writeHead(res.statusCode,res.headers);
         res.pipe(response, {
@@ -85,7 +85,7 @@ class Redirecter {
   /**
    * Run before scripts on request
    */
-  apply_before(request, response){
+  applyBefore(request, response){
     let redirecter = this;
 
     for (var i = 0; i < redirecter.before.length; i++){
