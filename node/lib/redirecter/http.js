@@ -77,6 +77,12 @@ class Redirecter {
    * Handles each request piping it to the proxied server
    */
   _handleRequest(request, response){
+    if (this._applyBefore(request, response)) {
+      this._pipeRequest(request, response);
+    }
+  }
+
+  _pipeRequest(request, response) {
     var options = {
       headers:request.headers,
       hostname: this.config.proxy.host,
@@ -85,16 +91,14 @@ class Redirecter {
       path:request.url
     };
 
-    if (this._applyBefore(request, response)) {
-      var req = http.request(options, function (res) {
-        response.writeHead(res.statusCode,res.headers);
-        res.pipe(response, {
-          end: true
-        });
+    var req = http.request(options, function (res) {
+      response.writeHead(res.statusCode,res.headers);
+      res.pipe(response, {
+        end: true
       });
+    });
 
-      request.pipe(req);
-    }
+    request.pipe(req);
   }
 
   /**
