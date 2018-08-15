@@ -1,6 +1,6 @@
-describe('Redirecter::Proxy', function() {
+describe('Proxy::Server', function() {
 
-  var Proxy = require('../../../lib/redirecter/proxy'),
+  var proxyServer = require('../../../lib/proxy/server'),
     EasyClient = require('../../support/easy_client'),
     nock = require('nock');
 
@@ -30,7 +30,7 @@ describe('Redirecter::Proxy', function() {
         });
       },
       subject: function() {
-        return Proxy(this.config());
+        return proxyServer(this.config());
       },
       nockScope: function() {
         return nock('http://localhost:' + this.serverPort())

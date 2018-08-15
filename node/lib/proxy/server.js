@@ -4,7 +4,7 @@ var http = require('http'),
 /**
  * Class responsible for tunnelling requests
  */
-class Proxy {
+class Server {
   constructor(config) {
     _.bindAll(this, '_handleRequest');
 
@@ -98,7 +98,7 @@ class Proxy {
 }
 
 module.exports = function(config){
-  return new Proxy(config);
+  return new Server(config);
 };
 
-module.exports.fn = Proxy.prototype;
+module.exports.fn = Server.prototype;
