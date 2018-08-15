@@ -1,5 +1,5 @@
 var http = require('http'),
-  _ = require("../underscore_ext");
+  _ = require('../underscore_ext');
 
 /**
  * Class responsible for tunnelling requests
@@ -35,7 +35,7 @@ class Proxy {
     redirecter.config = _.extend({
       port:3330,
       proxy: {
-        host: "localhost",
+        host: 'localhost',
         port: 80
       },
       before:[]
