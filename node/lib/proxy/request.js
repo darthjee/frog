@@ -3,6 +3,8 @@ var http = require('http'),
 
 class Request {
   constructor(config, request, response) {
+    _.bindAll(this, '_handleResponset');
+
     this._configure(config);
     this.request = request;
     this.response = response;
@@ -24,13 +26,13 @@ class Request {
       path:     this.request.url
     };
 
-    var that = this;
+    return http.request(options, this._handleResponset);
+  }
 
-    return http.request(options, function (res) {
-      that.response.writeHead(res.statusCode, res.headers);
-      res.pipe(that.response, {
-        end: true
-      });
+  _handleResponset(res) {
+    this.response.writeHead(res.statusCode, res.headers);
+    res.pipe(this.response, {
+      end: true
     });
   }
 }
