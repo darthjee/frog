@@ -31,14 +31,12 @@ class Server {
    * Configure redirecter
    */
   _configure(config) {
-    let redirecter = this;
-
-    redirecter.config = _.extend({
+    this.config = _.extend({
       port:3330,
       before:[]
     }, config);
 
-    redirecter.before = _.asArray(config.before);
+    this.before = _.asArray(config.before);
   }
 
   /**
