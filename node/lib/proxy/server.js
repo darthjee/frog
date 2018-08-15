@@ -1,5 +1,6 @@
-var http = require('http'),
+var Http = require('http'),
   _ = require('../underscore_ext');
+  Request = require('./request');
 
 /**
  * Class responsible for tunnelling requests
@@ -50,7 +51,7 @@ class Server {
   _createServer() {
     let redirecter = this;
 
-    redirecter.server = http.createServer(this._handleRequest);
+    redirecter.server = Http.createServer(this._handleRequest);
   }
 
   /**
@@ -67,20 +68,7 @@ class Server {
   }
 
   _proxyRequest(request, response) {
-    var options = {
-      headers:  request.headers,
-      hostname: this.config.proxy.host,
-      port:     this.config.proxy.port,
-      method:   request.method,
-      path:     request.url
-    };
-
-    return http.request(options, function (res) {
-      response.writeHead(res.statusCode, res.headers);
-      res.pipe(response, {
-        end: true
-      });
-    });
+    return Request(this.config, request, response).startRequest();
   }
 
   /**
