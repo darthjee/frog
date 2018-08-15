@@ -2,16 +2,12 @@ var Http = require('http');
 
 class EasyClient {
   constructor(options) {
-    this.options = options
+    this.options = options;
     this.postData = options.data;
   }
 
-  static get(options) {
-  }
-
   call(success) {
-    var responseData = '',
-        client = this;
+    var responseData = '';
 
     var req = Http.request(this.options);
 
@@ -20,20 +16,20 @@ class EasyClient {
     }
 
     req.on('response', function(response) {
-        response.on('data', function(buffer) {
+      response.on('data', function(buffer) {
+        responseData = responseData.concat(buffer.toString());
+      });
+      response.on('end', function(buffer) {
+        if (buffer) {
           responseData = responseData.concat(buffer.toString());
+        }
+        success({
+          headers: response.headers,
+          body: responseData,
+          status: response.statusCode
         });
-        response.on('end', function(buffer) {
-          if (buffer) {
-            responseData = responseData.concat(buffer.toString());
-          }
-          success({
-            headers: response.headers,
-            body: responseData,
-            status: response.statusCode
-          });
-        });
-      }).end();
+      });
+    }).end();
   }
 }
 
