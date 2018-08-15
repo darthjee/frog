@@ -1,5 +1,5 @@
 var Http = require('http'),
-  _ = require('../underscore_ext');
+  _ = require('../underscore_ext'),
   Request = require('./request');
 
 /**
