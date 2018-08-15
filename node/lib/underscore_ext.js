@@ -1,4 +1,4 @@
-var _ = require("underscore");
+var _ = require('underscore');
 
 /**
  * Wraps value in array
@@ -18,6 +18,6 @@ _.constructor.prototype.asArray = function(value){
   if (value.constructor == Array)
     return value;
   return [value];
-}
+};
 
 module.exports = _;
