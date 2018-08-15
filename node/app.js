@@ -1,7 +1,7 @@
-redirecter = require('./lib/redirecter/http.js');
+var proxy = require('./lib/redirecter/http.js');
 
-redirecter({
-  before: function(request, response){
+proxy({
+  before: function(){
     return true;
   }
 }).listen();
