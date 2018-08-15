@@ -22,8 +22,8 @@ class Proxy {
   /**
    * Stops listening
    */
- stop() {
-   this.server.close();
+  stop() {
+    this.server.close();
   }
 
   /**
