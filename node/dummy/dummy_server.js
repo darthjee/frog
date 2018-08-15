@@ -1,5 +1,5 @@
 var http = require('http'),
-    _ = require('underscore');
+  _ = require('underscore');
 
 class DummyServer {
   constructor() {
