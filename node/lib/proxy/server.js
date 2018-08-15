@@ -35,10 +35,6 @@ class Server {
 
     redirecter.config = _.extend({
       port:3330,
-      proxy: {
-        host: 'localhost',
-        port: 80
-      },
       before:[]
     }, config);
 
@@ -68,7 +64,7 @@ class Server {
   }
 
   _proxyRequest(request, response) {
-    return Request(this.config, request, response).startRequest();
+    return Request(this.config.proxy, request, response).startRequest();
   }
 
   /**

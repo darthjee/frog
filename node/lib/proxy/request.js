@@ -1,17 +1,25 @@
-var http = require('http');
+var http = require('http'),
+  _ = require('../underscore_ext');
 
 class Request {
   constructor(config, request, response) {
-    this.config = config;
+    this._configure(config);
     this.request = request;
     this.response = response;
+  }
+
+  _configure(config) {
+    this.config = _.extend({
+      host: 'localhost',
+      port: 80
+    }, config);
   }
 
   startRequest() {
     var options = {
       headers:  this.request.headers,
-      hostname: this.config.proxy.host,
-      port:     this.config.proxy.port,
+      hostname: this.config.host,
+      port:     this.config.port,
       method:   this.request.method,
       path:     this.request.url
     };
