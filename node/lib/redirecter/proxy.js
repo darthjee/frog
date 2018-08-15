@@ -1,5 +1,5 @@
 var http = require('http'),
-    _ = require("../underscore_ext");
+  _ = require("../underscore_ext");
 
 /**
  * Class responsible for tunnelling requests
@@ -23,7 +23,7 @@ class Proxy {
    * Stops listening
    */
  stop() {
-    this.server.close();
+   this.server.close();
   }
 
   /**
