@@ -98,8 +98,7 @@ class Proxy {
 }
 
 module.exports = function(config){
-  redirecter = new Proxy(config);
-  return redirecter;
+  return new Proxy(config);
 };
 
 module.exports.fn = Proxy.prototype;
