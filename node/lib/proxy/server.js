@@ -3,7 +3,44 @@ var Http = require('http'),
   Request = require('./request');
 
 /**
- * Class responsible for tunnelling requests
+ * Class responsible for proxying requests
+ *
+ * Server will listen to an specific port (given in configuration)
+ * then pipe any received request to it's proxy configurated server
+ * piping then the response back
+ *
+ * @param config {Object} Configuration of server
+ * @param config.port {Integer} Port where the server will listen for requests
+ * @param config.proxy {Object} Proxy ({@link Request}) configuration
+ * @param config.before {Function} Function to be used as filter of request
+ *   When a filter returns false, the request is not proxied (and the function will
+ *   then handle the response).
+ *
+ *   before can also be an Array of functions
+ *
+ * @see Request
+ *
+ * @example
+ *   filterFunction(request, response) {
+ *     if (request.url == '/mocked') {
+ *       response.write('mocked response');
+ *       response.end();
+ *       return false;
+ *     } else {
+ *       return true;
+ *     }
+ *   }
+ *
+ *   new Server({
+ *     port: 3500,
+ *     proxy: {
+ *       host: 'google.com',
+ *       port: 80
+ *     },
+ *     before: [
+ *       filterFunction
+ *     ]
+ *   }).listen();
  */
 class Server {
   constructor(config) {
@@ -13,7 +50,7 @@ class Server {
   }
 
   /**
-   * Listen to port
+   * Starts listening on configurated port
    */
   listen() {
     this._createServer();
@@ -28,7 +65,7 @@ class Server {
   }
 
   /**
-   * Configure redirecter
+   * @private
    */
   _configure(config) {
     this.config = _.extend({
@@ -40,7 +77,7 @@ class Server {
   }
 
   /**
-   * Initiate server
+   * @private
    */
   _createServer() {
     let redirecter = this;
@@ -49,7 +86,7 @@ class Server {
   }
 
   /**
-   * Handles each request piping it to the proxied server
+   * @private
    */
   _handleRequest(request, response){
     if (this._applyBefore(request, response)) {
@@ -57,16 +94,22 @@ class Server {
     }
   }
 
+  /**
+   * @private
+   */
   _pipeRequest(request, response) {
     request.pipe(this._proxyRequest(request, response));
   }
 
+  /**
+   * @private
+   */
   _proxyRequest(request, response) {
     return Request(this.config.proxy, request, response).startRequest();
   }
 
   /**
-   * Run before scripts on request
+   * @private
    */
   _applyBefore(request, response){
     let redirecter = this;
