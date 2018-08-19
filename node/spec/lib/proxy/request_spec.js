@@ -3,7 +3,7 @@ describe('Proxy.Request', function() {
     MockedResponse = require('../../support/mocked_response'),
     nock = require('nock');
 
-  beforeAll(function() {
+  beforeEach(function() {
     this.memorize({
       host: 'example.com',
       port: 3000,
@@ -37,7 +37,7 @@ describe('Proxy.Request', function() {
 
   describe('#startRequest', function() {
     describe('when finishing the request', function() {
-      beforeAll(function(done) {
+      beforeEach(function(done) {
         this.memorize('response', function() {
           return new MockedResponse();
         });

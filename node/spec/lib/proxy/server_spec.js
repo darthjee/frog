@@ -4,7 +4,7 @@ describe('Proxy::Server', function() {
     EasyClient = require('../../support/easy_client'),
     nock = require('nock');
 
-  beforeAll(function(){
+  beforeEach(function(){
     this.memorize({
       port: 3300,
       serverPort: 3000,
@@ -41,16 +41,16 @@ describe('Proxy::Server', function() {
     this.memorized('subject').listen();
   });
 
-  afterAll(function() {
+  afterEach(function() {
     this.memorized('subject').stop();
   });
 
   describe('when performing a GET request', function() {
-    beforeAll(function() {
+    beforeEach(function() {
       this.memorize('method', 'GET');
     });
     describe('returning success', function() {
-      beforeAll(function(done) {
+      beforeEach(function(done) {
         this.memorize('path', '/success');
         var context = this;
 
@@ -79,7 +79,7 @@ describe('Proxy::Server', function() {
     });
 
     describe('returning error', function() {
-      beforeAll(function(done) {
+      beforeEach(function(done) {
         this.memorize('path', '/error');
         var context = this;
 
@@ -103,14 +103,14 @@ describe('Proxy::Server', function() {
   });
 
   describe('when performing a POST request', function() {
-    beforeAll(function() {
+    beforeEach(function() {
       this.memorize({
         method: 'POST',
         requestData: '{"id": 1, "name": "json"}'
       });
     });
     describe('returning success', function() {
-      beforeAll(function(done) {
+      beforeEach(function(done) {
         this.memorize('path', '/success');
         var context = this;
 
@@ -146,7 +146,7 @@ describe('Proxy::Server', function() {
     });
 
     describe('returning error', function() {
-      beforeAll(function(done) {
+      beforeEach(function(done) {
         this.memorize('path', '/error');
         var context = this;
 
