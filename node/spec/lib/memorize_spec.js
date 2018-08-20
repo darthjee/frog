@@ -92,4 +92,39 @@ describe('Memorize', function() {
       });
     });
   });
+
+  describe('when calling memorized twice inside the same example', function() {
+    beforeEach(function() {
+      var context = this;
+      context.called = 0;
+
+      context.memorize('object', function() {
+        context.called = context.called + 1;
+        return { id: 1 };
+      });
+    });
+
+    it('does not call the function twice', function () {
+      this.memorized('object');
+      this.memorized('object');
+
+      expect(this.called).toEqual(1);
+    });
+
+    describe('when another memorizaton calls for the first one', function() {
+      beforeEach(function() {
+        this.memorize('object2', function() {
+          this.object();
+          return { id: 2 };
+        });
+      });
+
+      it('does not call the function twice', function () {
+        this.memorized('object2');
+        this.memorized('object');
+
+        expect(this.called).toEqual(1);
+      });
+    });
+  });
 });

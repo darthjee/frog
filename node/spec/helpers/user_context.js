@@ -10,6 +10,7 @@ function enhanceContext(context) {
     },
     memorizeValue: function(key, func) {
       if (func == null || func.constructor != Function) {
+
         var value = func;
         func = function() { return value; };
       }
