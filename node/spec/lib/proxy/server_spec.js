@@ -1,13 +1,10 @@
-describe('Redirecter::Proxy', function() {
+describe('Proxy::Server', function() {
 
-  var Proxy = require('../../../lib/redirecter/proxy'),
-      EasyClient = require('../../support/easy_client'),
-      nock = require('nock'),
-      Http = require('http'),
-      server,
-      subject;
+  var proxyServer = require('../../../lib/proxy/server'),
+    EasyClient = require('../../support/easy_client'),
+    nock = require('nock');
 
-  beforeAll(function(){
+  beforeEach(function(){
     this.memorize({
       port: 3300,
       serverPort: 3000,
@@ -33,27 +30,27 @@ describe('Redirecter::Proxy', function() {
         });
       },
       subject: function() {
-        return Proxy(this.config());
+        return proxyServer(this.config());
       },
       nockScope: function() {
         return nock('http://localhost:' + this.serverPort())
-        .matchHeader('X-REQUEST', '#ABC');
+          .matchHeader('X-REQUEST', '#ABC');
       }
     });
 
     this.memorized('subject').listen();
   });
 
-  afterAll(function() {
+  afterEach(function() {
     this.memorized('subject').stop();
   });
 
   describe('when performing a GET request', function() {
-    beforeAll(function() {
+    beforeEach(function() {
       this.memorize('method', 'GET');
     });
     describe('returning success', function() {
-      beforeAll(function(done) {
+      beforeEach(function(done) {
         this.memorize('path', '/success');
         var context = this;
 
@@ -65,7 +62,7 @@ describe('Redirecter::Proxy', function() {
         this.memorized('client').call(function(response) {
           context.response = response;
           done();
-        })
+        });
       });
 
       it('returns the proxied body', function() {
@@ -82,7 +79,7 @@ describe('Redirecter::Proxy', function() {
     });
 
     describe('returning error', function() {
-      beforeAll(function(done) {
+      beforeEach(function(done) {
         this.memorize('path', '/error');
         var context = this;
 
@@ -92,7 +89,7 @@ describe('Redirecter::Proxy', function() {
         this.memorized('client').call(function(response) {
           context.response = response;
           done();
-        })
+        });
       });
 
       it('returns the proxied body', function() {
@@ -106,14 +103,14 @@ describe('Redirecter::Proxy', function() {
   });
 
   describe('when performing a POST request', function() {
-    beforeAll(function() {
+    beforeEach(function() {
       this.memorize({
         method: 'POST',
         requestData: '{"id": 1, "name": "json"}'
       });
     });
     describe('returning success', function() {
-      beforeAll(function(done) {
+      beforeEach(function(done) {
         this.memorize('path', '/success');
         var context = this;
 
@@ -128,7 +125,7 @@ describe('Redirecter::Proxy', function() {
         this.memorized('client').call(function(response) {
           context.response = response;
           done();
-        })
+        });
       });
 
       it('returns the proxied body', function() {
@@ -149,7 +146,7 @@ describe('Redirecter::Proxy', function() {
     });
 
     describe('returning error', function() {
-      beforeAll(function(done) {
+      beforeEach(function(done) {
         this.memorize('path', '/error');
         var context = this;
 
@@ -159,7 +156,7 @@ describe('Redirecter::Proxy', function() {
         this.memorized('client').call(function(response) {
           context.response = response;
           done();
-        })
+        });
       });
 
       it('returns the proxied body', function() {

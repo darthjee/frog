@@ -4,13 +4,14 @@
   "author": "Fernando 'darthjee' Favini",
   "version": "0.1.0",
   "dependencies": {
-    "eslint": "^5.3.0",
-    "lint": "^1.1.2",
     "underscore": "~1.6.x"
   },
   "devDependencies": {
-    "jasmine": "latest",
-    "express": "latest",
-    "nock": "latest"
+    "eslint": "^5.3.0",
+    "lint": "^1.1.2",
+    "eslint-plugin-jasmine": "^2.10.1",
+    "express": "4.16.3",
+    "jasmine": "3.2.0",
+    "nock": "9.6.1"
   }
 }

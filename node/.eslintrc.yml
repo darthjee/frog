@@ -1,6 +1,9 @@
 env:
   es6: true
   node: true
+  jasmine: true
+plugins:
+  - jasmine
 extends: 'eslint:recommended'
 parserOptions:
   ecmaVersion: 2017
