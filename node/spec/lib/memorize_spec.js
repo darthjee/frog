@@ -127,4 +127,21 @@ describe('Memorize', function() {
       });
     });
   });
+
+  describe('when calling memorized value within a memorized function', function() {
+    beforeEach(function() {
+      this.memorize({
+        object: function() {
+          return { id: 1 };
+        },
+        object2: function() {
+          return { obj1: this.object() };
+        }
+      });
+    });
+
+    it('returns the inner object in the inner call', function() {
+      expect(this.memorized('object2')).toEqual({ obj1: { id: 1 } });
+    });
+  });
 });
