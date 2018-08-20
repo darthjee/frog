@@ -90,6 +90,88 @@ describe('Memorize', function() {
           expect(this.memorized('object4')).toEqual({ id: 8 });
         });
       });
+
+      describe('when overriding with beforeAll', function() {
+        beforeAll(function() {
+          this.memorize('object', function() {
+            return { id: 9 };
+          });
+
+          this.memorize('object2', { id: 10 });
+
+          this.memorize({
+            object3: function() {
+              return { id: 11 };
+            },
+            object4: { id: 12 }
+          });
+        });
+
+        describe('when retrieving the value memorized with a function', function() {
+          it('returns the memorized object', function() {
+            expect(this.memorized('object')).toEqual({ id: 5 });
+          });
+        });
+
+        describe('when retrieving the value memorized with a value', function() {
+          it('returns the memorized object', function() {
+            expect(this.memorized('object2')).toEqual({ id: 6 });
+          });
+        });
+
+        describe('when retrieving the value memorized with a function inside a hash', function() {
+          it('returns the memorized object', function() {
+            expect(this.memorized('object3')).toEqual({ id: 7 });
+          });
+        });
+
+        describe('when retrieving the value memorized with a value inside a hash', function() {
+          it('returns the memorized object', function() {
+            expect(this.memorized('object4')).toEqual({ id: 8 });
+          });
+        });
+      });
+    });
+
+    describe('when overriding with beforeAll', function() {
+      beforeAll(function() {
+        this.memorize('object', function() {
+          return { id: 9 };
+        });
+
+        this.memorize('object2', { id: 10 });
+
+        this.memorize({
+          object3: function() {
+            return { id: 11 };
+          },
+          object4: { id: 12 }
+        });
+      });
+
+      describe('when retrieving the value memorized with a function', function() {
+        it('returns the memorized object', function() {
+          expect(this.memorized('object')).toEqual({ id: 9 });
+        });
+      });
+
+      describe('when retrieving the value memorized with a value', function() {
+        it('returns the memorized object', function() {
+          expect(this.memorized('object2')).toEqual({ id: 10 });
+        });
+      });
+
+      describe('when retrieving the value memorized with a function inside a hash', function() {
+        it('returns the memorized object', function() {
+          expect(this.memorized('object3')).toEqual({ id: 11 });
+        });
+      });
+
+      describe('when retrieving the value memorized with a value inside a hash', function() {
+        it('returns the memorized object', function() {
+          expect(this.memorized('object4')).toEqual({ id: 12 });
+        });
+      });
     });
   });
 
