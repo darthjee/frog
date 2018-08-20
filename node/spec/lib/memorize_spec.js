@@ -296,5 +296,73 @@ describe('Memorize', function() {
         });
       });
     });
+
+    describe('defining the main object in a beforeEach', function() {
+      beforeEach(function() {
+        this.memorize('object2', function() {
+          return { obj1: this.object() };
+        });
+      });
+
+      describe('when setting inner object', function() {
+        describe('in a beforeEach', function() {
+          beforeEach(function() {
+            this.memorize('object', function() {
+              return { id: 101 };
+            });
+          });
+
+          it('accepts the value', function() {
+            expect(this.memorized('object2')).toEqual({ obj1: { id:101 } });
+          });
+        });
+
+        describe('in a beforeAll', function() {
+          beforeAll(function() {
+            this.memorize('object', function() {
+              return { id: 102 };
+            });
+          });
+
+          it('accepts the value', function() {
+            expect(this.memorized('object2')).toEqual({ obj1: { id:102 } });
+          });
+        });
+      });
+    });
+
+    describe('defining the main object in a beforeAll', function() {
+      beforeAll(function() {
+        this.memorize('object2', function() {
+          return { obj1: this.object() };
+        });
+      });
+
+      describe('when setting inner object', function() {
+        describe('in a beforeEach', function() {
+          beforeEach(function() {
+            this.memorize('object', function() {
+              return { id: 101 };
+            });
+          });
+
+          it('accepts the value', function() {
+            expect(this.memorized('object2')).toEqual({ obj1: { id:101 } });
+          });
+        });
+
+        describe('in a beforeAll', function() {
+          beforeAll(function() {
+            this.memorize('object', function() {
+              return { id: 102 };
+            });
+          });
+
+          it('accepts the value', function() {
+            expect(this.memorized('object2')).toEqual({ obj1: { id:102 } });
+          });
+        });
+      });
+    });
   });
 });
