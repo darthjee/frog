@@ -49,6 +49,7 @@ describe('Proxy::Server', function() {
     beforeEach(function() {
       this.memorize('method', 'GET');
     });
+
     describe('returning success', function() {
       beforeEach(function(done) {
         this.memorize('path', '/success');
