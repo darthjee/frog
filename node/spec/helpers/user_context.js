@@ -31,7 +31,14 @@ class Memory {
   }
 
   memorized(key) {
-    return this.getMemorizedMap()[key].call(this.buildContext());
+    return this.getMemorizedMap()[key].call(this.getContext());
+  }
+
+  getContext() {
+    if (!this.context) {
+      this.context = this.buildContext();
+    }
+    return this.context;
   }
 
   buildContext()  {
@@ -60,6 +67,7 @@ class Memory {
       func = function() { return value; };
     }
     this.getMemorizedMap()[key] = new Memorized(func);
+    this.context = null;
   }
 
   memorizeAll(values) {
