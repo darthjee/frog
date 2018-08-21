@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: darthjee/circleci_node:0.0.1
+      - image: darthjee/circleci_node_mongo:0.0.5
     steps:
       - checkout
       - run: cd node; npm install; jasmine
