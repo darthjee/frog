@@ -11,7 +11,7 @@ describe('Proxy.Request', function() {
         return {
           host: this.host(),
           port: this.port()
-        }
+        };
       },
       subject: function() {
         return proxyRequest(

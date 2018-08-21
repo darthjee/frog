@@ -9,7 +9,7 @@ class Memorized {
 
   reset() {
     this.value = null;
-    this.called = false
+    this.called = false;
   }
 
   call(context) {
@@ -90,7 +90,7 @@ function enhanceContext(context) {
       if (!this.memory) {
         this.memory = new Memory();
       }
-      return this.memory;;
+      return this.memory;
     },
     memorize: function() {
       this.getMemory().memorize.apply(this.memory, arguments);
