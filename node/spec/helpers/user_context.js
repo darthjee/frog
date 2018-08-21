@@ -31,6 +31,10 @@ class Memory {
   }
 
   memorized(key) {
+    return this.getMemorizedMap()[key].call(this.buildContext());
+  }
+
+  buildContext()  {
     var context = {},
       that = this;
 
@@ -40,7 +44,7 @@ class Memory {
       };
     });
 
-    return this.getMemorizedMap()[key].call(context);
+    return context;
   }
 
   getMemorizedMap() {
