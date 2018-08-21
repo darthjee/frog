@@ -1,0 +1,9 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: darthjee/node_mongo:0.0.3
+    working_directory: /home/node/app
+    steps:
+      - checkout
+      - run: ls
