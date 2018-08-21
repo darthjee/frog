@@ -31,7 +31,11 @@ class Memory {
   }
 
   memorized(key) {
-    return this.getMemorizedMap()[key].call(this.getContext());
+    if(key.constructor == String) {
+      return this.getMemorizedMap()[key].call(this.getContext());
+    } else {
+      key.call(this.getContext());
+    }
   }
 
   getContext() {

@@ -364,5 +364,17 @@ describe('Memorize', function() {
         });
       });
     });
+
+    describe('when calling memorized scope', function() {
+      beforeEach(function() {
+        this.memorize('object', { id: 1 });
+      });
+
+      it('retrieves info from scope', function() {
+        this.memorized(function() {
+          expect(this.object()).toEqual({id: 1});
+        });
+      });
+    });
   });
 });
