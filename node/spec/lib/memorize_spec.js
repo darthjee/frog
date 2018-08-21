@@ -201,7 +201,7 @@ describe('Memorize', function() {
         });
       });
 
-      xit('does not call the function twice', function () {
+      it('does not call the function twice', function () {
         this.memorized('object2');
         this.memorized('object');
 
