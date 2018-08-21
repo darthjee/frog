@@ -1,40 +1,90 @@
 var _ = require('underscore');
 
+class Memorized {
+  constructor(func) {
+    this.func = func;
+    this.value = null;
+    this.called = false;
+  }
+
+  reset() {
+    this.value = null;
+    this.called = false
+  }
+
+  call(context) {
+    if (!this.called) {
+      this.value = this.func.call(context);
+      this.called = true;
+    }
+    return this.value;
+  }
+}
+
+class Memory {
+  memorize() {
+    if(arguments[0].constructor == Object) {
+      return this.memorizeAll.apply(this, arguments);
+    } else {
+      return this.memorizeValue.apply(this, arguments);
+    }
+  }
+
+  memorized(key) {
+    var context = {},
+      that = this;
+
+    _.each(this.getMemorizedMap(), function(_, key) {
+      context[key] = function() {
+        return that.memorized(key);
+      };
+    });
+
+    return this.getMemorizedMap()[key].call(context);
+  }
+
+  getMemorizedMap() {
+    if (!this.memorizedMap) {
+      this.memorizedMap = {};
+    }
+    return this.memorizedMap;
+  }
+
+  memorizeValue(key, func) {
+    if (func == null || func.constructor != Function) {
+      var value = func;
+      func = function() { return value; };
+    }
+    this.getMemorizedMap()[key] = new Memorized(func);
+  }
+
+  memorizeAll(values) {
+    var that = this;
+    _.each(values, function(func, key) {
+      that.memorizeValue(key, func);
+    });
+  }
+
+  reset() {
+    _.each(this.getMemorizedMap(), function(memorized) {
+      memorized.reset();
+    });
+  }
+}
+
 function enhanceContext(context) {
   _.extend(context, {
-    getMemorizedMap: function() {
-      if (!this.memorizedMap) {
-        this.memorizedMap = {};
+    getMemory: function() {
+      if (!this.memory) {
+        this.memory = new Memory();
       }
-      return this.memorizedMap;
-    },
-    memorizeValue: function(key, func) {
-      if (func == null || func.constructor != Function) {
-
-        var value = func;
-        func = function() { return value; };
-      }
-      this.getMemorizedMap()[key] = func;
-    },
-    memorizeAll: function(values) {
-      var that = this;
-      _.each(values, function(func, key) {
-        that.memorizeValue(key, func);
-      });
+      return this.memory;;
     },
     memorize: function() {
-      if(arguments[0].constructor == Object) {
-        return this.memorizeAll.apply(this, arguments);
-      } else {
-        return this.memorizeValue.apply(this, arguments);
-      }
+      this.getMemory().memorize.apply(this.memory, arguments);
     },
-    memorized: function(key) {
-      var value = this.getMemorizedMap()[key]();
-      this.getMemorizedMap()[key] = function() {
-        return value;
-      };
-      return value;
+    memorized: function() {
+      return this.getMemory().memorized.apply(this.memory, arguments);
     }
   });
 
@@ -47,7 +97,13 @@ function enhanceContext(context) {
       if (oldContext.hasOwnProperty(prop)) {
         var oldValue = oldContext[prop];
 
-        if (oldValue != null && oldValue.constructor == Object) {
+        if (
+          oldValue != null && (
+            oldValue.constructor == Memory || 
+            oldValue.constructor == Memorized ||
+            oldValue.constructor == Object
+          )
+        ) {
           context[prop] = UserContext.fromExisting(oldValue);
         } else {
           context[prop] = oldValue;
@@ -62,4 +118,8 @@ function enhanceContext(context) {
 
 beforeAll(function() {
   enhanceContext(this);
+});
+
+afterEach(function() {
+  this.getMemory().reset();
 });
