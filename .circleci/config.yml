@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: darthjee/node_mongo:0.0.3
+      - image: darthjee/node_mongo:0.0.5
     working_directory: /home/node/app
     steps:
       - checkout
