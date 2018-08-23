@@ -8,28 +8,26 @@ class EasyClient {
   }
 
   call(success) {
-    var responseData = '';
+    var responseData = '',
+      req = Http.request(this.options),
+      handler = new RequestHandler(req, {
+        data: function(buffer) {
+          responseData = responseData.concat(buffer);
+        },
+        end: function(buffer, response) {
+          responseData = responseData.concat(buffer);
 
-    var req = Http.request(this.options);
+          success({
+            headers: response.headers,
+            body: responseData,
+            status: response.statusCode
+          });
+        }
+      });
 
     if (this.postData) {
       req.write(this.postData);
     }
-
-    var handler = new RequestHandler(req, {
-      data: function(buffer) {
-        responseData = responseData.concat(buffer);
-      },
-      end: function(buffer, response) {
-        responseData = responseData.concat(buffer);
-
-        success({
-          headers: response.headers,
-          body: responseData,
-          status: response.statusCode
-        });
-      }
-    });
 
     handler.perform();
   }
