@@ -1,7 +1,8 @@
 describe('Proxy.Request', function() {
   var proxyRequest = require('../../../lib/proxy/request'),
     MockedResponse = require('../../support/mocked_response'),
-    nock = require('nock');
+    nock = require('nock'),
+    RequestHandler = require('../../support/easy_client/request_handler');
 
   beforeEach(function() {
     this.memorize({
@@ -31,6 +32,13 @@ describe('Proxy.Request', function() {
       },
       request: function() {
         return this.subject().startRequest();
+      },
+      requestHandler: function() {
+        return new RequestHandler(this.request(), {
+          data: function() {
+            //console.info(arguments)
+          }
+        });
       }
     });
   });
@@ -45,15 +53,7 @@ describe('Proxy.Request', function() {
         this.memorized(function() {
           this.nockScope().get(/.*/)
             .reply(200, 'the data');
-          this.request()
-            .on('response', function(response) {
-              response.on('data', function() {
-                console.info('data ->', arguments);
-              });
-            }).on('end', function() {
-              console.info('done');
-              done();
-            }).end();
+          this.requestHandler().perform();
         });
       });
 
