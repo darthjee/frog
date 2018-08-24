@@ -1,25 +1,38 @@
 var _ = require('underscore');
 
 class ResponseHandler {
-  constructor(response, handlers) {
+  constructor(response, dataHandlers, endHandlers) {
     this.response = response;
-    this.handlers = handlers;
+    this.dataHandlers = dataHandlers;
+    this.endHandlers = endHandlers;
 
     _.bindAll(this, 'handleData', 'handleEnd');
   }
 
   handleData(buffer) {
-    this.handlers.data(buffer.toString(), this.response);
-  }
-
-  handleEnd(buffer) {
-    var bufferString = '';
+    var that = this,
+      bufferString = '';
 
     if (buffer) {
       bufferString = buffer.toString();
     }
 
-    this.handlers.end(bufferString, this.response);
+    _.each(this.dataHandlers, function (handler) {
+      handler(bufferString, that.response);
+    });
+  }
+
+  handleEnd(buffer) {
+    var that = this,
+      bufferString = '';
+
+    if (buffer) {
+      bufferString = buffer.toString();
+    }
+
+    _.each(this.endHandlers, function (handler) {
+      handler(bufferString, that.response);
+    });
   }
 }
 

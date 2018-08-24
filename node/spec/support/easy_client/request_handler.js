@@ -4,7 +4,16 @@ var ResponseHandler = require('./response_handler'),
 class RequestHandler {
   constructor(request, handlers) {
     this.request = request;
-    this.handlers = handlers;
+    this.dataHandlers = [];
+    this.endHandlers = [];
+
+    if (handlers.data) {
+      this.dataHandlers.push(handlers.data);
+    }
+
+    if (handlers.end) {
+      this.endHandlers.push(handlers.end);
+    }
 
     _.bindAll(this, '_listenEvents');
   }
@@ -14,10 +23,22 @@ class RequestHandler {
   }
 
   _listenEvents(response) {
-    var handler = new ResponseHandler(response, this.handlers);
+    var handler = new ResponseHandler(
+      response, this.dataHandlers, this.endHandlers
+    );
 
     response.on('data', handler.handleData);
     response.on('end', handler.handleEnd);
+  }
+
+  onData(handler) {
+    this.dataHandlers.push(handler);
+    return this;
+  }
+
+  onEnd(handler) {
+    this.endHandlers.push(handler);
+    return this;
   }
 
   perform() {
