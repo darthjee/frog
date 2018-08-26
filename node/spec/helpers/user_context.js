@@ -1,22 +1,10 @@
 var _ = require('underscore'),
   Memory = require('../support/memory'),
-  Memorized = require('../support/memory/memorized');
+  Memorized = require('../support/memory/memorized'),
+  memoryExtension = require('./memory');
 
 function enhanceContext(context) {
-  _.extend(context, {
-    getMemory: function() {
-      if (!this.memory) {
-        this.memory = new Memory();
-      }
-      return this.memory;
-    },
-    memorize: function() {
-      this.getMemory().memorize.apply(this.memory, arguments);
-    },
-    memorized: function() {
-      return this.getMemory().memorized.apply(this.memory, arguments);
-    }
-  });
+  _.extend(context, memoryExtension);
 
   var UserContext = context.constructor;
 
