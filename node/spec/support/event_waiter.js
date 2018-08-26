@@ -18,7 +18,7 @@ class Dependency {
 class Waiter {
   constructor(context) {
     this.context = context || this;
-    this.dependencies = [];
+    this.incompleteDependencies = [];
     this.blocks = [];
 
     _.bindAll(this, '_done');
@@ -27,7 +27,7 @@ class Waiter {
   addDependency(block) {
     var dependency = new Dependency(this._done);
 
-    this.dependencies.push(dependency);
+    this.incompleteDependencies.push(dependency);
 
     block.call(this.context, dependency.done);
   }
@@ -61,9 +61,13 @@ class Waiter {
   }
 
   _incompleteDependencies() {
-    return _.select(this.dependencies, function(dependency) {
-      return ! dependency.completed;
-    });
+    this.incompleteDependencies = _.select(
+      this.incompleteDependencies, function(dependency) {
+        return ! dependency.completed;
+      }
+    );
+
+    return this.incompleteDependencies;
   }
 }
 
