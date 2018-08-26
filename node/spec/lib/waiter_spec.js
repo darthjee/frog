@@ -76,9 +76,7 @@ describe('Waiter', function() {
       describe('when there are dependencies', function() {
         beforeEach(function() {
           this.waiter.addDependency(function(done) {
-            this.firstDependency = function() {
-              done();
-            };
+            this.firstDependency = done;
           });
         });
 
@@ -127,11 +125,44 @@ describe('Waiter', function() {
         });
 
         describe('when there are more than one dependencies', function() {
+          beforeEach(function() {
+            this.waiter.addDependency(function(done) {
+              this.secondDependency = done;
+            });
+            this.waiter.addDependency(function(done) {
+              this.thirdDependency = done;
+            });
+          });
+
           describe('and only one has been called', function() {
-            xit('does not run the code', function() {});
+            beforeEach(function() {
+              this.firstDependency();
+            });
+
+            it('does not run the code', function() {
+              var called = false;
+
+              this.waiter.run(function() {
+                called = true;
+              });
+
+              expect(called).toBeFalsy();
+            });
 
             describe('after another, but not all have been called', function() {
-              xit('does not run the code', function() {});
+              beforeEach(function() {
+                this.secondDependency();
+              });
+
+              it('does not run the code', function() {
+                var called = false;
+
+                this.waiter.run(function() {
+                  called = true;
+                });
+
+                expect(called).toBeFalsy();
+              });
             });
 
             describe('when running the same dependencies several times', function() {
@@ -139,7 +170,20 @@ describe('Waiter', function() {
             });
 
             describe('after all dependencies have been called', function() {
-              xit('runs the code', function() {});
+              beforeEach(function() {
+                this.secondDependency();
+                this.thirdDependency();
+              });
+
+              it('runs the code', function() {
+                var called = false;
+
+                this.waiter.run(function() {
+                  called = true;
+                });
+
+                expect(called).toBeTruthy();
+              });
             });
           });
         });
