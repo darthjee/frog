@@ -62,14 +62,30 @@ describe('Waiter', function() {
       });
 
       describe('when there are no dependencies', function() {
-        it('runs the given block right away', function() {
-          var called = false;
+        beforeEach(function () {
+          var context = this;
+
+          context.called = 0;
 
           this.waiter.run(function() {
-            called = true;
+            context.called++;
+          });
+        });
+
+        it('runs the given block right away', function() {
+          expect(this.called).toEqual(1);
+        });
+
+        describe('and we add and finish a dependency after the block has been ran', function() {
+          beforeEach(function() {
+            this.waiter.addDependency(function(done) {
+              done();
+            });
           });
 
-          expect(called).toBeTruthy();
+          it('does not run the block again', function() {
+            expect(this.called).toEqual(1);
+          });
         });
       });
 
