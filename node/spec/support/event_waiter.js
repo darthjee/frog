@@ -1,17 +1,35 @@
 var _ = require('underscore');
 
+class Dependency {
+  constructor(callback) {
+    this.callback = callback;
+
+    _.bindAll(this, 'done');
+
+    this.completed = false;
+  }
+
+  done() {
+    this.completed = true;
+    this.callback();
+  }
+}
+
 class Waiter {
   constructor(context) {
     this.context = context || this;
-    this.dependencies = 0;
+    this.dependencies = [];
     this.blocks = [];
 
     _.bindAll(this, '_done');
   }
 
   addDependency(block) {
-    this.dependencies++;
-    block.call(this.context, this._done);
+    var dependency = new Dependency(this._done);
+
+    this.dependencies.push(dependency);
+
+    block.call(this.context, dependency.done);
   }
 
   run(block) {
@@ -21,7 +39,7 @@ class Waiter {
   }
 
   _callRun(block) {
-    if (this.dependencies <= 0) {
+    if (this._completed()) {
       block.call(this.context);
       return true;
     }
@@ -31,13 +49,21 @@ class Waiter {
   _done() {
     var waiter = this;
 
-    this.dependencies--;
-
-    if (this.dependencies <= 0) {
+    if (this._completed()) {
       _.each(this.blocks, function(block) {
         waiter._callRun(block);
       });
     }
+  }
+
+  _completed() {
+    return this._incompleteDependencies().length == 0;
+  }
+
+  _incompleteDependencies() {
+    return _.select(this.dependencies, function(dependency) {
+      return ! dependency.completed;
+    });
   }
 }
 
