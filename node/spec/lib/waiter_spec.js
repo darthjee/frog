@@ -110,7 +110,19 @@ describe('Waiter', function() {
           });
 
           describe('and the dependency is run after the block has been added', function() {
-            xit('does runs the given block after the dependency', function() {});
+            beforeEach(function() {
+              var context = this;
+
+              this.waiter.run(function() {
+                context.called = true;
+              });
+            });
+
+            it('does runs the given block after the dependency', function() {
+              this.firstDependency();
+
+              expect(this.called).toBeTruthy();
+            });
           });
         });
 

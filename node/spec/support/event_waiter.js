@@ -4,6 +4,7 @@ class Waiter {
   constructor(context) {
     this.context = context || this;
     this.dependencies = 0;
+    this.blocks = [];
 
     _.bindAll(this, '_done');
   }
@@ -14,15 +15,29 @@ class Waiter {
   }
 
   run(block) {
-    if (this.dependencies <= 0) {
-      block.call(this.context);
+    if (!this._callRun(block)) {
+      this.blocks.push(block);
     };
   }
 
+  _callRun(block) {
+    if (this.dependencies <= 0) {
+      block.call(this.context);
+      return true;
+    }
+    return false;
+  }
+
   _done() {
+    var waiter = this;
+
     this.dependencies--;
 
-    if (this.dependencies == 0) {}
+    if (this.dependencies <= 0) {
+      _.each(this.blocks, function(block) {
+        waiter._callRun(block);
+      });
+    }
   }
 }
 
