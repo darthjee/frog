@@ -166,7 +166,20 @@ describe('Waiter', function() {
             });
 
             describe('when running the same dependencies several times', function() {
-              xit('does not run the code', function() {});
+              beforeEach(function() {
+                this.secondDependency();
+                this.secondDependency();
+              });
+
+              it('does not run the code', function() {
+                var called = false;
+
+                this.waiter.run(function() {
+                  called = true;
+                });
+
+                expect(called).toBeFalsy();
+              });
             });
 
             describe('after all dependencies have been called', function() {
