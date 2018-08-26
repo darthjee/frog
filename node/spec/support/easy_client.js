@@ -1,4 +1,5 @@
-var Http = require('http');
+var Http = require('http'),
+  RequestHandler = require('./easy_client/request_handler');
 
 class EasyClient {
   constructor(options) {
@@ -7,29 +8,28 @@ class EasyClient {
   }
 
   call(success) {
-    var responseData = '';
+    var responseData = '',
+      req = Http.request(this.options),
+      handler = new RequestHandler(req, {
+        data: function(buffer) {
+          responseData = responseData.concat(buffer);
+        },
+        end: function(buffer, response) {
+          responseData = responseData.concat(buffer);
 
-    var req = Http.request(this.options);
+          success({
+            headers: response.headers,
+            body: responseData,
+            status: response.statusCode
+          });
+        }
+      });
 
     if (this.postData) {
       req.write(this.postData);
     }
 
-    req.on('response', function(response) {
-      response.on('data', function(buffer) {
-        responseData = responseData.concat(buffer.toString());
-      });
-      response.on('end', function(buffer) {
-        if (buffer) {
-          responseData = responseData.concat(buffer.toString());
-        }
-        success({
-          headers: response.headers,
-          body: responseData,
-          status: response.statusCode
-        });
-      });
-    }).end();
+    handler.perform();
   }
 }
 

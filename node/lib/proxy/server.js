@@ -90,22 +90,16 @@ class Server {
    */
   _handleRequest(request, response){
     if (this._applyBefore(request, response)) {
-      this._pipeRequest(request, response);
+      request.pipe(this._proxyRequest(request, response));
     }
   }
 
   /**
    * @private
    */
-  _pipeRequest(request, response) {
-    request.pipe(this._proxyRequest(request, response));
-  }
-
-  /**
-   * @private
-   */
   _proxyRequest(request, response) {
-    return Request(this.config.proxy, request, response).startRequest();
+    return Request(this.config.proxy, request, response)
+      .startRequest();
   }
 
   /**
