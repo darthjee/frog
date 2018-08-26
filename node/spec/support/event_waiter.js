@@ -15,6 +15,18 @@ class Dependency {
   }
 }
 
+class Block {
+  constructor(block, context) {
+    this.block = _.bind(block, context);
+    this.called = false;
+  }
+
+  call() {
+    this.block();
+    this.called = true;
+  }
+}
+
 class Waiter {
   constructor(context) {
     this.context = context || this;
@@ -32,15 +44,17 @@ class Waiter {
     block.call(this.context, dependency.done);
   }
 
-  run(block) {
+  run(callback) {
+    var block = new Block(callback, this.context);
+
     if (!this._callRun(block)) {
       this.blocks.push(block);
-    };
+    }
   }
 
   _callRun(block) {
     if (this._completed()) {
-      block.call(this.context);
+      block.call();
       return true;
     }
     return false;

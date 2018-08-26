@@ -120,6 +120,18 @@ describe('Waiter', function() {
               it('does runs the given block after the dependency', function() {
                 expect(this.called).toEqual(1);
               });
+
+              describe('and another dependency is added and finished', function() {
+                beforeEach(function() {
+                  this.waiter.addDependency(function(done) {
+                    done();
+                  });
+                });
+
+                it('does not run the given block again', function() {
+                  expect(this.called).toEqual(1);
+                });
+              });
             });
           });
 
