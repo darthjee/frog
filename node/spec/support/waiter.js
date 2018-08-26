@@ -1,31 +1,6 @@
-var _ = require('underscore');
-
-class Dependency {
-  constructor(callback) {
-    this.callback = callback;
-
-    _.bindAll(this, 'done');
-
-    this.completed = false;
-  }
-
-  done() {
-    this.completed = true;
-    this.callback();
-  }
-}
-
-class Block {
-  constructor(block, context) {
-    this.block = _.bind(block, context);
-    this.called = false;
-  }
-
-  call() {
-    this.block();
-    this.called = true;
-  }
-}
+var _ = require('underscore'),
+  Dependency = require('./waiter/dependency');
+  Block = require('./waiter/block');
 
 class Waiter {
   constructor(context) {
