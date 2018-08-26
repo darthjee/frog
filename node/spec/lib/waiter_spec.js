@@ -231,4 +231,51 @@ describe('Waiter', function() {
       });
     });
   });
+
+  describe('with memorized', function() {
+    beforeEach(function() {
+      var context = this;
+
+      this.memorize('variable', Math.floor(Math.random() * 1000));
+
+      this.dependency(function(done) {
+        context.context = this;
+
+        context.firstDependency = done;
+      });
+    });
+
+    it('run in the context of memorized', function() {
+      var context = this.memorized(function() {
+        return this;
+      });
+      expect(this.context).toEqual(context);
+    });
+
+    describe('when dependency has not been called', function() {
+      beforeEach(function() {
+        var context = this;
+
+        this.called = false
+
+        this.dependent(function() {
+          context.called = true;
+        });
+      });
+
+      it('does not run the code', function() {
+        expect(this.called).toBeFalsy();
+      });
+
+      describe('when dependency finished after test', function() {
+        beforeEach(function() {
+          this.firstDependency();
+        });
+
+        it('runs the code', function() {
+          expect(this.called).toBeTruthy();
+        });
+      });
+    });
+  });
 });

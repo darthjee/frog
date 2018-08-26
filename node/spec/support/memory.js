@@ -14,7 +14,7 @@ class Memory {
     if(key.constructor == String) {
       return this.getMemorizedMap()[key].call(this.getContext());
     } else {
-      key.call(this.getContext());
+      return key.call(this.getContext());
     }
   }
 
