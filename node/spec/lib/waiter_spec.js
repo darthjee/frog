@@ -97,14 +97,30 @@ describe('Waiter', function() {
         });
 
         describe('and it has not been called', function() {
-          it('does not run the given block right away', function() {
-            var called = false;
+          describe('and a block is added', function() {
+            beforeEach(function () {
+              var context = this;
 
-            this.waiter.run(function() {
-              called = true;
+              context.called = 0;
+
+              this.waiter.run(function() {
+                context.called++;
+              });
             });
 
-            expect(called).toBeFalsy();
+            it('does not run the given block right away', function() {
+              expect(this.called).toEqual(0);
+            });
+
+            describe('and the dependency is run after the block has been added', function() {
+              beforeEach(function() {
+                this.firstDependency();
+              });
+
+              it('does runs the given block after the dependency', function() {
+                expect(this.called).toEqual(1);
+              });
+            });
           });
 
           describe('and it runs before the block is added', function() {
@@ -120,22 +136,6 @@ describe('Waiter', function() {
               });
 
               expect(called).toBeTruthy();
-            });
-          });
-
-          describe('and the dependency is run after the block has been added', function() {
-            beforeEach(function() {
-              var context = this;
-
-              this.waiter.run(function() {
-                context.called = true;
-              });
-            });
-
-            it('does runs the given block after the dependency', function() {
-              this.firstDependency();
-
-              expect(this.called).toBeTruthy();
             });
           });
         });
