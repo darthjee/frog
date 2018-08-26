@@ -5,4 +5,12 @@ jobs:
       - image: darthjee/circleci_node_mongo:0.0.5
     steps:
       - checkout
-      - run: cd node; npm install; jasmine
+      - run:
+          name: Npm Install
+          command: cd node; npm install;
+      - run:
+          name: Run Jasmine
+          command: cd node; jasmine
+      - run:
+          name: JS Lint
+          command: eslint -c node/.eslintrc.yml  node/lib/ node/spec/
