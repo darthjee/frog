@@ -256,7 +256,7 @@ describe('Waiter', function() {
       beforeEach(function() {
         var context = this;
 
-        this.called = false
+        this.called = false;
 
         this.dependent(function() {
           context.called = true;

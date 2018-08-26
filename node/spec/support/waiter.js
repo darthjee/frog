@@ -1,5 +1,5 @@
 var _ = require('underscore'),
-  Dependency = require('./waiter/dependency');
+  Dependency = require('./waiter/dependency'),
   Block = require('./waiter/block');
 
 class Waiter {

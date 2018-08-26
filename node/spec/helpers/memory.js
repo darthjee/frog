@@ -56,4 +56,4 @@ module.exports = {
 
     this.getWaiter(key).run(block);
   }
-}
+};
