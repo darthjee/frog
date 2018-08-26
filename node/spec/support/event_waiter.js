@@ -9,11 +9,14 @@ class Waiter {
   }
 
   addDependency(block) {
+    this.dependencies++;
     block.call(this.context, this._done);
   }
 
   run(block) {
-    block.call(this.context);
+    if (this.dependencies <= 0) {
+      block.call(this.context);
+    };
   }
 
   _done() {

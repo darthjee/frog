@@ -83,7 +83,7 @@ describe('Waiter', function() {
         });
 
         describe('and it has not been called', function() {
-          xit('does not run the given block right away', function() {
+          it('does not run the given block right away', function() {
             var called = false;
 
             this.waiter.run(function() {
@@ -95,10 +95,10 @@ describe('Waiter', function() {
 
           describe('and it runs before the block is added', function() {
             beforeEach(function() {
-              this.firsDependency();
+              this.firstDependency()
             });
 
-            xit('it runs the block right away', function() {
+            it('it runs the block right away', function() {
               var called = false;
 
               this.waiter.run(function() {
