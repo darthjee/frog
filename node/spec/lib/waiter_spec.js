@@ -137,7 +137,7 @@ describe('Waiter', function() {
 
           describe('and it runs before the block is added', function() {
             beforeEach(function() {
-              this.firstDependency()
+              this.firstDependency();
             });
 
             it('it runs the block right away', function() {

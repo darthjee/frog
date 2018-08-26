@@ -60,13 +60,23 @@ class Waiter {
     return false;
   }
 
-  _done() {
+  _runAll() {
     var waiter = this;
 
+    _.each(this._notRanBlocks(), function(block) {
+      waiter._callRun(block);
+    });
+  }
+
+  _notRanBlocks() {
+    return _.select(this.blocks, function(block) {
+      return !block.called;
+    });
+  }
+
+  _done() {
     if (this._completed()) {
-      _.each(this.blocks, function(block) {
-        waiter._callRun(block);
-      });
+      this._runAll();
     }
   }
 
