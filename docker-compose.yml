@@ -33,7 +33,7 @@ services:
     links:
       - frog_mongo:mongo
     volumes:
-      - ./node:/home/node/app
+      - ./:/home/node/app
 
   ################# Node CONTAINERS ###################
 

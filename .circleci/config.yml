@@ -7,10 +7,10 @@ jobs:
       - checkout
       - run:
           name: Npm Install
-          command: cd node; npm install;
+          command: npm install;
       - run:
           name: Run Jasmine
-          command: cd node; jasmine
+          command: jasmine
       - run:
           name: JS Lint
-          command: eslint -c node/.eslintrc.yml  node/lib/ node/spec/
+          command: eslint -c .eslintrc.yml  lib/ spec/
