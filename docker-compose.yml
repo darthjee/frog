@@ -27,7 +27,7 @@ services:
 
   #################### Base  ####################
 
-  base_node: &base_node
+  base: &base
     build: ./
     env_file: .env
     links:
@@ -37,16 +37,16 @@ services:
 
   ################# Node CONTAINERS ###################
 
-  frog_node_app:
-    <<: *base_node
-    container_name: frog_node_app
+  frog_app:
+    <<: *base
+    container_name: frog_app
     command: node dummy.js
     ports:
       - 127.0.0.1:3001:3000
 
-  frog_node_root:
-    <<: *base_node
-    container_name: frog_node_root
+  frog_root:
+    <<: *base
+    container_name: frog_root
     user: root
     command: /bin/bash
 
