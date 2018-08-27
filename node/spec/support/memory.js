@@ -20,22 +20,9 @@ class Memory {
 
   getContext() {
     if (!this.context) {
-      this.context = this.buildContext();
+      this.context = {};
     }
     return this.context;
-  }
-
-  buildContext()  {
-    var context = {},
-      that = this;
-
-    _.each(this.getMemorizedMap(), function(_, key) {
-      context[key] = function() {
-        return that.memorized(key);
-      };
-    });
-
-    return context;
   }
 
   getMemorizedMap() {
@@ -46,18 +33,23 @@ class Memory {
   }
 
   memorizeValue(key, func) {
+    var that = this;
+
     if (func == null || func.constructor != Function) {
       var value = func;
       func = function() { return value; };
     }
+
     this.getMemorizedMap()[key] = new Memorized(func);
-    this.context = null;
+    this.getContext()[key] = function() {
+      return that.memorized(key);
+    };
   }
 
   memorizeAll(values) {
-    var that = this;
+    var memmory = this;
     _.each(values, function(func, key) {
-      that.memorizeValue(key, func);
+      memmory.memorizeValue(key, func);
     });
   }
 
