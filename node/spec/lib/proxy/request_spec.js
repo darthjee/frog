@@ -23,9 +23,10 @@ describe('Proxy.Request', function() {
       },
       originalRequest: {
         headers: {},
-        method: 'GET',
+        method: 'POST',
         url: '/path'
       },
+      postData: '{"id":1}',
       nockScope: function() {
         var url = 'http://' + this.host() + ':' + this.port();
         return nock(url);
@@ -53,14 +54,16 @@ describe('Proxy.Request', function() {
         });
 
         this.dependency(function(dependencyDone) {
-          this.nockScope().get(/.*/).reply(function(path) {
+          this.nockScope().post(/.*/).reply(function(path, data) {
             context.memorize('requestedPath', path);
+            context.memorize('requestedData', data);
             dependencyDone();
             return [200, 'the data'];
           });
         });
 
         this.dependency(function(dependencyDone) {
+          this.request().write(this.postData());
           this.requestHandler().onEnd(function() {
             dependencyDone();
           }).perform();
