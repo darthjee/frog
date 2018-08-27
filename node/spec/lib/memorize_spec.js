@@ -377,4 +377,17 @@ describe('Memorize', function() {
       });
     });
   });
+
+  describe('when calling memorized scope', function() {
+    describe('when changing the memory inside the scope', function() {
+      it('retrieves info from scope', function() {
+        var context = this;
+
+        this.memorized(function() {
+          context.memorize('object', 100);
+          expect(this.object).not.toBeUndefined();
+        });
+      });
+    });
+  });
 });
