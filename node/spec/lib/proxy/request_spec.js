@@ -5,6 +5,8 @@ describe('Proxy.Request', function() {
     RequestHandler = require('../../support/easy_client/request_handler');
 
   beforeEach(function() {
+    var userContext = this;
+
     this.memorize({
       host: 'example.com',
       port: 3000,
@@ -22,21 +24,22 @@ describe('Proxy.Request', function() {
         );
       },
       originalRequest: {
-        headers: {},
-        method: 'GET',
+        headers: { 'X-REQUEST': '#ABC' },
+        method: 'POST',
         url: '/path'
       },
+      postData: '{"id":1}',
       nockScope: function() {
         var url = 'http://' + this.host() + ':' + this.port();
-        return nock(url);
+        return nock(url).matchHeader('X-REQUEST', '#ABC');
       },
       request: function() {
         return this.subject().startRequest();
       },
       requestHandler: function() {
         return new RequestHandler(this.request(), {
-          data: function() {
-            //console.info(arguments)
+          data: function(data) {
+            userContext.memorize('responseData', data);
           }
         });
       }
@@ -46,21 +49,52 @@ describe('Proxy.Request', function() {
   describe('#startRequest', function() {
     describe('when finishing the request', function() {
       beforeEach(function(done) {
+        var context = this;
+
         this.memorize('response', function() {
           return new MockedResponse();
         });
 
-        this.memorized(function() {
-          this.nockScope().get(/.*/)
-            .reply(200, 'the data');
+        this.dependency(function(dependencyDone) {
+          this.nockScope()
+            .post(/.*/)
+            .reply(function(path, data) {
+              context.memorize('requestedPath', path);
+              context.memorize('requestedData', data);
+              dependencyDone();
+              return [200, 'the data'];
+            });
+        });
+
+        this.dependency(function(dependencyDone) {
+          this.request().write(this.postData());
           this.requestHandler().onEnd(function() {
-            done();
+            dependencyDone();
           }).perform();
+        });
+
+        this.dependent(done);
+      });
+
+      it('pipes the path from the request', function(done) {
+        this.dependent(function() {
+          expect(this.requestedPath()).toEqual('/path');
+          done();
         });
       });
 
-      xit('returns a Request', function() {
-        expect(this.memorized('request').finished).toBeTruthy();
+      it('pipes the data from the request', function(done) {
+        this.dependent(function() {
+          expect(this.requestedData()).toEqual(this.postData());
+          done();
+        });
+      });
+
+      it('pipes the response data', function(done) {
+        this.dependent(function() {
+          expect(this.responseData()).toEqual('the data');
+          done();
+        });
       });
     });
   });
