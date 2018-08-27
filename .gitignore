@@ -4,17 +4,8 @@
 # or operating system, you probably want to add a global ignore instead:
 #   git config --global core.excludesfile '~/.gitignore_global'
 
-# Ignore bundler config.
-/.bundle
-
-# Ignore the default SQLite database.
-/rails/db/*.sqlite3
-/rails/db/*.sqlite3-journal
-
-# Ignore all logfiles and tempfiles.
-/rails/log/*.log
-/rails/tmp
-/rails/coverage
-
 /node/node_modules
 /node/out
+
+/node_modules
+/out
