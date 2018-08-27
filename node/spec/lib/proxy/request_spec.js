@@ -46,21 +46,34 @@ describe('Proxy.Request', function() {
   describe('#startRequest', function() {
     describe('when finishing the request', function() {
       beforeEach(function(done) {
+        var context = this;
+
         this.memorize('response', function() {
           return new MockedResponse();
         });
 
-        this.memorized(function() {
-          this.nockScope().get(/.*/)
-            .reply(200, 'the data');
+        this.dependency(function(dependencyDone) {
+          this.nockScope().get(/.*/).reply(function(path) {
+            context.memorize('requestedPath', path);
+            dependencyDone();
+            return [200, 'the data'];
+          });
+        });
+
+        this.dependency(function(dependencyDone) {
           this.requestHandler().onEnd(function() {
-            done();
+            dependencyDone();
           }).perform();
         });
+
+        this.dependent(done);
       });
 
-      xit('returns a Request', function() {
-        expect(this.memorized('request').finished).toBeTruthy();
+      it('pipes the path from the request', function(done) {
+        this.dependent(function() {
+          expect(this.requestedPath()).toEqual('/path');
+          done();
+        });
       });
     });
   });
