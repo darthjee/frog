@@ -5,6 +5,8 @@ describe('Proxy.Request', function() {
     RequestHandler = require('../../support/easy_client/request_handler');
 
   beforeEach(function() {
+    var userContext = this;
+
     this.memorize({
       host: 'example.com',
       port: 3000,
@@ -36,8 +38,8 @@ describe('Proxy.Request', function() {
       },
       requestHandler: function() {
         return new RequestHandler(this.request(), {
-          data: function() {
-            //console.info(arguments)
+          data: function(data) {
+            userContext.memorize('responseData', data);
           }
         });
       }
@@ -84,6 +86,13 @@ describe('Proxy.Request', function() {
       it('pipes the data from the request', function(done) {
         this.dependent(function() {
           expect(this.requestedData()).toEqual(this.postData());
+          done();
+        });
+      });
+
+      it('pipes the response data', function(done) {
+        this.dependent(function() {
+          expect(this.responseData()).toEqual('the data');
           done();
         });
       });
