@@ -22,14 +22,14 @@ describe('Proxy.Request', function() {
         );
       },
       originalRequest: {
-        headers: {},
+        headers: { 'X-REQUEST': '#ABC' },
         method: 'POST',
         url: '/path'
       },
       postData: '{"id":1}',
       nockScope: function() {
         var url = 'http://' + this.host() + ':' + this.port();
-        return nock(url);
+        return nock(url).matchHeader('X-REQUEST', '#ABC');
       },
       request: function() {
         return this.subject().startRequest();
@@ -54,12 +54,14 @@ describe('Proxy.Request', function() {
         });
 
         this.dependency(function(dependencyDone) {
-          this.nockScope().post(/.*/).reply(function(path, data) {
-            context.memorize('requestedPath', path);
-            context.memorize('requestedData', data);
-            dependencyDone();
-            return [200, 'the data'];
-          });
+          this.nockScope()
+            .post(/.*/)
+            .reply(function(path, data) {
+              context.memorize('requestedPath', path);
+              context.memorize('requestedData', data);
+              dependencyDone();
+              return [200, 'the data'];
+            });
         });
 
         this.dependency(function(dependencyDone) {
