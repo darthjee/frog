@@ -78,6 +78,13 @@ describe('Proxy.Request', function() {
           done();
         });
       });
+
+      it('pipes the data from the request', function(done) {
+        this.dependent(function() {
+          expect(this.requestedData()).toEqual(this.postData());
+          done();
+        });
+      });
     });
   });
 });
