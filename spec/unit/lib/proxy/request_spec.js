@@ -1,8 +1,8 @@
 describe('Proxy.Request', function() {
-  var proxyRequest = require('../../../lib/proxy/request'),
-    MockedResponse = require('../../support/mocked_response'),
+  var proxyRequest = require('../../../../lib/proxy/request'),
+    MockedResponse = require('../../../support/mocked_response'),
     nock = require('nock'),
-    RequestHandler = require('../../support/easy_client/request_handler');
+    RequestHandler = require('../../../support/easy_client/request_handler');
 
   beforeEach(function() {
     var userContext = this;

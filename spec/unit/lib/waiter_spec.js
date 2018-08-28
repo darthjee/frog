@@ -1,5 +1,5 @@
 describe('Waiter', function() {
-  var Waiter = require('../support/waiter');
+  var Waiter = require('../../support/waiter');
 
   describe('#execute', function() {
     describe('when not defining the context', function() {

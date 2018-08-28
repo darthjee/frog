@@ -1,7 +1,7 @@
 describe('Proxy::Server', function() {
 
-  var proxyServer = require('../../../lib/proxy/server'),
-    EasyClient = require('../../support/easy_client'),
+  var proxyServer = require('../../../../lib/proxy/server'),
+    EasyClient = require('../../../support/easy_client'),
     nock = require('nock');
 
   beforeEach(function(){

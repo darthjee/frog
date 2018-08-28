@@ -1,5 +1,5 @@
 describe('Underscore', function() {
-  var _ = require('../../lib/underscore_ext');
+  var _ = require('../../../lib/underscore_ext');
 
   describe('#asArray', function() {
     describe('when value is an array', function() {
