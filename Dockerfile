@@ -1,4 +1,4 @@
-FROM darthjee/node_mongo:0.0.5
+FROM darthjee/node_mongo:0.0.6
 
 ADD package.json  /home/node/app
 
